@@ -1,8 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 
-// Progress data stored in localStorage
+/**
+ * Progress tracking hook - supports multi-course architecture.
+ * Unit keys are strings like "infosec-1272-1" for course-specific tracking.
+ */
 export interface ProgressData {
-  completedUnits: number[];
+  completedUnits: string[];
   completedChallenges: number[];
   quizScores: Record<number, number>;
   streak: number;
@@ -29,14 +32,14 @@ export function useProgress() {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Update streak based on last visit
+        // Migrate old number[] completedUnits to string[] if needed
+        if (parsed.completedUnits?.length > 0 && typeof parsed.completedUnits[0] === 'number') {
+          parsed.completedUnits = parsed.completedUnits.map((id: number) => `infosec-1272-${id}`);
+        }
         const today = new Date().toDateString();
         const yesterday = new Date(Date.now() - 86400000).toDateString();
-        if (parsed.lastVisit === yesterday) {
-          parsed.streak += 1;
-        } else if (parsed.lastVisit !== today) {
-          parsed.streak = 1;
-        }
+        if (parsed.lastVisit === yesterday) parsed.streak += 1;
+        else if (parsed.lastVisit !== today) parsed.streak = 1;
         parsed.lastVisit = today;
         return parsed;
       }
@@ -44,29 +47,20 @@ export function useProgress() {
     return { ...DEFAULT_PROGRESS, lastVisit: new Date().toDateString(), streak: 1 };
   });
 
-  // Persist progress changes
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   }, [progress]);
 
-  const completeUnit = useCallback((unitId: number) => {
+  const completeUnit = useCallback((unitKey: string | number) => {
+    const key = typeof unitKey === 'number' ? `infosec-1272-${unitKey}` : unitKey;
     setProgress((prev) => {
-      if (prev.completedUnits.includes(unitId)) return prev;
-      const updated = { ...prev, completedUnits: [...prev.completedUnits, unitId] };
+      if (prev.completedUnits.includes(key)) return prev;
+      const updated = { ...prev, completedUnits: [...prev.completedUnits, key] };
       // Check achievements
       if (updated.completedUnits.length === 1 && !updated.unlockedAchievements.includes("first-unit")) {
         updated.unlockedAchievements = [...updated.unlockedAchievements, "first-unit"];
       }
-      if (updated.completedUnits.includes(6) && !updated.unlockedAchievements.includes("recon-master")) {
-        updated.unlockedAchievements = [...updated.unlockedAchievements, "recon-master"];
-      }
-      if (updated.completedUnits.includes(4) && !updated.unlockedAchievements.includes("sql-expert")) {
-        updated.unlockedAchievements = [...updated.unlockedAchievements, "sql-expert"];
-      }
-      if (updated.completedUnits.includes(5) && !updated.unlockedAchievements.includes("pentester")) {
-        updated.unlockedAchievements = [...updated.unlockedAchievements, "pentester"];
-      }
-      if (updated.completedUnits.length === 8 && !updated.unlockedAchievements.includes("hacker")) {
+      if (updated.completedUnits.length >= 13 && !updated.unlockedAchievements.includes("hacker")) {
         updated.unlockedAchievements = [...updated.unlockedAchievements, "hacker"];
       }
       return updated;
@@ -97,7 +91,7 @@ export function useProgress() {
     });
   }, []);
 
-  const overallProgress = progress.completedUnits.length / 8;
+  const overallProgress = progress.completedUnits.length / 13; // 7 + 6 total units
 
   return { progress, completeUnit, completeChallenge, saveQuizScore, overallProgress };
 }
