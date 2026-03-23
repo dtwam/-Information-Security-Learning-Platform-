@@ -31,6 +31,12 @@ export interface CourseUnit {
   quiz?: QuizQuestion[];
   /** Concept cards for quick review */
   concepts?: ConceptCard[];
+  /** YouTube video ID for Arabic explanation */
+  videoId?: string;
+  /** Lesson objective in Arabic */
+  objectiveAr?: string;
+  /** Quick summary in Arabic */
+  summaryAr?: string;
 }
 
 export interface UnitContent {

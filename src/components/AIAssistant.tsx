@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, Sparkles } from "lucide-react";
+import { X, Send, Bot, Sparkles } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -8,40 +8,52 @@ interface Message {
   timestamp: Date;
 }
 
-// Local AI responses for cybersecurity topics
+/** Arabic-first cybersecurity tutor with friendly, simple explanations */
 const getAIResponse = (question: string): string => {
   const q = question.toLowerCase();
 
-  if (q.includes("sql injection") || q.includes("sqli")) {
-    return "**SQL Injection** is a code injection technique that exploits vulnerabilities in an application's database layer.\n\n**How it works:**\n- Attacker inserts malicious SQL code into input fields\n- The application executes the malicious query\n- This can lead to data theft, modification, or deletion\n\n**Prevention:**\n- Use parameterized queries/prepared statements\n- Input validation and sanitization\n- Least privilege database accounts\n- Web Application Firewalls (WAF)\n\n**Example:** `' OR 1=1 --` bypasses authentication by making the WHERE clause always true.";
+  // Arabic quick buttons
+  if (q === "اشرح بشكل أبسط" || q.includes("ابسط") || q.includes("أبسط")) {
+    return "بالطبع! 😊\n\nتخيل أنك تريد حماية بيتك:\n- **المصادقة** = مفتاح الباب (فقط من يملك المفتاح يدخل)\n- **التشفير** = كتابة رسائلك بلغة سرية (حتى لو شخص شافها ما يفهمها)\n- **جدار الحماية** = حارس الأمن (يمنع الغرباء من الدخول)\n\nالأمن السيبراني ببساطة = حماية أجهزتك ومعلوماتك من السرقة والاختراق 🛡️";
   }
-  if (q.includes("xss") || q.includes("cross-site scripting")) {
-    return "**Cross-Site Scripting (XSS)** allows attackers to inject malicious scripts into web pages.\n\n**Types:**\n1. **Stored XSS** - Script stored on target server\n2. **Reflected XSS** - Script reflected off a web server\n3. **DOM-based XSS** - Script executes in the DOM\n\n**Prevention:**\n- Output encoding/escaping\n- Content Security Policy (CSP)\n- Input validation\n- HTTPOnly cookies";
+  if (q === "اعطني مثال" || q.includes("مثال")) {
+    return "**مثال عملي** 🔧\n\nلنفترض أنك تريد فحص شبكتك:\n\n```\nnmap 192.168.1.1\n```\n\nهذا الأمر يفحص جهاز الراوتر ويعرض لك:\n- المنافذ المفتوحة (مثل منفذ 80 للويب)\n- الخدمات التي تعمل عليه\n\nمثل ما تفحص أبواب ونوافذ بيتك - أي واحد مفتوح؟ 🏠";
   }
-  if (q.includes("nmap") || q.includes("scan")) {
-    return "**Nmap** is the most popular network scanning tool.\n\n**Common commands:**\n- `nmap <target>` - Basic scan\n- `nmap -sV <target>` - Version detection\n- `nmap -sS <target>` - TCP SYN scan (stealth)\n- `nmap -O <target>` - OS detection\n- `nmap -A <target>` - Aggressive scan\n\nTry it in the **Cyber Lab** terminal!";
-  }
-  if (q.includes("penetration") || q.includes("pentest")) {
-    return "**Penetration Testing** is authorized simulated hacking.\n\n**Phases:**\n1. **Planning** - Define scope and rules\n2. **Reconnaissance** - Gather information\n3. **Scanning** - Identify vulnerabilities\n4. **Exploitation** - Attempt to exploit\n5. **Reporting** - Document findings\n\n**Tools:** Nmap, Metasploit, Burp Suite, SQLMap";
-  }
-  if (q.includes("osint") || q.includes("reconnaissance") || q.includes("recon")) {
-    return "**OSINT** (Open Source Intelligence) is gathering info from public sources.\n\n**Techniques:**\n- Google dorking (`site:`, `filetype:`, `intitle:`)\n- WHOIS lookups\n- Social media analysis\n- Shodan searches\n- DNS enumeration\n\n**Tools:** theHarvester, Maltego, Recon-ng, Shodan";
-  }
-  if (q.includes("kali") || q.includes("linux")) {
-    return "**Kali Linux** is a Debian-based distro for penetration testing.\n\n**Key tools included:**\n- **Nmap** - Network scanning\n- **Metasploit** - Exploitation framework\n- **Burp Suite** - Web app testing\n- **Wireshark** - Packet analysis\n- **John the Ripper** - Password cracking\n- **Aircrack-ng** - Wireless auditing\n\nPractice in our **Cyber Lab**!";
-  }
-  if (q.includes("cia") || q.includes("triad")) {
-    return "**CIA Triad** - Core principles of information security:\n\n1. **Confidentiality** - Only authorized access\n2. **Integrity** - Data is accurate and unaltered\n3. **Availability** - Systems accessible when needed\n\nEvery security control aims to protect one or more of these properties.";
+  if (q === "لخص لي" || q.includes("لخص") || q.includes("ملخص")) {
+    return "**ملخص سريع** 📌\n\n**أهم المفاهيم:**\n1. 🔑 **اختبار الاختراق** = فحص أمان النظام بمحاكاة الهجمات\n2. 🛡️ **Kali Linux** = نظام التشغيل الأساسي للمختبرين\n3. 🔍 **Nmap** = أداة مسح الشبكات الأولى\n4. 🕸️ **SQL Injection** = أخطر هجمات الويب\n5. 📡 **WiFi Security** = حماية الشبكات اللاسلكية\n\nابدأ بـ Nmap ثم انتقل تدريجياً! 🚀";
   }
 
-  return "I'm your **Cybersecurity Learning Assistant** 🛡️\n\nI can help you with:\n- **SQL Injection** & web vulnerabilities\n- **XSS** (Cross-Site Scripting)\n- **Penetration Testing** methodology\n- **OSINT** & reconnaissance\n- **Kali Linux** commands\n- **CIA Triad** & security fundamentals\n\nAsk me anything about cybersecurity!";
+  if (q.includes("sql injection") || q.includes("sqli") || q.includes("حقن")) {
+    return "**حقن SQL** 💉\n\nتخيل أن موقع ويب يطلب منك اسم المستخدم:\n\nبدل ما تكتب اسمك، تكتب أمر لقاعدة البيانات!\n\n**مثال:**\n```\n' OR 1=1 --\n```\n\nهذا يخلي قاعدة البيانات تعطيك كل المعلومات 😱\n\n**الحماية:**\n- استخدم Prepared Statements\n- تحقق من المدخلات\n- استخدم WAF (جدار حماية تطبيقات الويب)\n\nجربها في المختبر بشكل آمن! 🧪";
+  }
+  if (q.includes("xss") || q.includes("cross-site")) {
+    return "**XSS - البرمجة عبر المواقع** 🕷️\n\nتخيل أنك تكتب تعليق في موقع، لكن بدل نص عادي تكتب كود JavaScript!\n\n**أنواعها:**\n1. **Stored** = الكود يتخزن في الموقع\n2. **Reflected** = يرجع لك من الخادم\n3. **DOM-based** = يشتغل في المتصفح\n\n**الحماية:**\n- فلترة المدخلات\n- Content Security Policy\n- HTTPOnly Cookies";
+  }
+  if (q.includes("nmap") || q.includes("مسح") || q.includes("scan")) {
+    return "**Nmap - ماسح الشبكات** 🔍\n\nأول أداة تتعلمها في الأمن السيبراني!\n\n**أوامر مهمة:**\n```\nnmap 192.168.1.1          # مسح أساسي\nnmap -sV 192.168.1.1      # اكتشاف الخدمات\nnmap -sS 192.168.1.1      # مسح سريع وخفي\nnmap -A 192.168.1.1       # مسح شامل\n```\n\nمثل ما تفحص أبواب ونوافذ مبنى - تشوف أيها مفتوح 🏢\n\nجرب في المختبر! 💻";
+  }
+  if (q.includes("kali") || q.includes("كالي") || q.includes("لينكس")) {
+    return "**Kali Linux** 🐉\n\nنظام التشغيل المفضل لمختبري الاختراق!\n\n**ليش نستخدمه؟**\n- يحتوي 600+ أداة أمنية جاهزة\n- مجاني ومفتوح المصدر\n- مبني على Linux (Debian)\n\n**مسارات مهمة:**\n- `/etc/` = ملفات الإعدادات\n- `/opt/` = أدوات Metasploit\n- `/root/` = المجلد الرئيسي\n\nابدأ بتثبيته على VirtualBox! 📦";
+  }
+  if (q.includes("wifi") || q.includes("لاسلك") || q.includes("wireless") || q.includes("شبك")) {
+    return "**أمن الشبكات اللاسلكية** 📡\n\n**الركائز الثلاث:**\n1. 🔑 المصادقة - من يتصل؟\n2. 🔒 السرية - البيانات مشفرة\n3. ✅ التكاملية - البيانات لم تتغير\n\n**كيف تحمي شبكتك:**\n- استخدم WPA2/WPA3\n- غيّر كلمة مرور الراوتر الافتراضية\n- أخفِ اسم الشبكة SSID\n- فعّل فلترة MAC\n\n**أدوات الاختبار:** airmon-ng, airodump-ng, aircrack-ng";
+  }
+  if (q.includes("burp") || q.includes("بيرب")) {
+    return "**Burp Suite** 🔓\n\nأقوى أداة لاختبار تطبيقات الويب!\n\n**المكونات الرئيسية:**\n- **Proxy** = يقاطع الطلبات بين المتصفح والخادم\n- **Intruder** = يؤتمت الهجمات\n- **Repeater** = يعيد إرسال الطلبات\n- **Scanner** = يكتشف الثغرات تلقائياً\n\n**إعداده:**\n1. شغّل Burp Suite\n2. اضبط proxy المتصفح على localhost:8080\n3. ابدأ باعتراض الطلبات!\n\nموجود مسبقاً في Kali Linux 🐉";
+  }
+  if (q.includes("metasploit") || q.includes("ميتاسبلويت")) {
+    return "**Metasploit Framework** ⚔️\n\nأشهر إطار عمل للاستغلال!\n\n**ببساطة:**\nيساعدك تختبر إذا النظام فيه ثغرات وتستغلها\n\n**الأوامر الأساسية:**\n```\nmsfconsole              # تشغيل\nsearch exploit_name     # البحث\nuse exploit/...         # اختيار\nset RHOST target_ip     # تحديد الهدف\nexploit                 # تنفيذ\n```\n\n⚠️ استخدمها فقط للأغراض التعليمية والأخلاقية!";
+  }
+
+  // Default Arabic welcome
+  return "مرحباً! 👋 أنا **مساعدك في الأمن السيبراني** 🛡️\n\nأقدر أساعدك في:\n- 🔍 شرح أي مفهوم أمني\n- 💻 أوامر Kali Linux\n- 🕸️ هجمات الويب (SQL Injection, XSS)\n- 📡 أمن الشبكات اللاسلكية\n- 🔧 الأدوات الأمنية\n\nاسألني أي سؤال بالعربي أو الإنجليزي! 😊";
 };
 
-const quickQuestions = [
-  "What is SQL Injection?",
-  "Explain XSS",
-  "How to use Nmap?",
-  "What is OSINT?",
+const quickQuestionsAr = [
+  "اشرح بشكل أبسط",
+  "اعطني مثال",
+  "لخص لي",
+  "ما هو Nmap؟",
 ];
 
 export default function AIAssistant() {
@@ -49,28 +61,28 @@ export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello! 👋 I'm your **Cybersecurity Learning Assistant**. Ask me about any topic from the course!",
+      content: "مرحباً! 👋 أنا **مساعدك في الأمن السيبراني**\n\nاسألني أي سؤال عن المقرر وسأشرحه لك بطريقة بسيطة! 😊",
       timestamp: new Date(),
     },
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
 
   const sendMessage = (text: string) => {
     if (!text.trim()) return;
-
     const userMsg: Message = { role: "user", content: text, timestamp: new Date() };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages(prev => [...prev, userMsg]);
     setInput("");
     setIsTyping(true);
 
-    // Simulate typing delay
     setTimeout(() => {
       const response = getAIResponse(text);
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: response, timestamp: new Date() },
-      ]);
+      setMessages(prev => [...prev, { role: "assistant", content: response, timestamp: new Date() }]);
       setIsTyping(false);
     }, 800);
   };
@@ -95,60 +107,69 @@ export default function AIAssistant() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-3rem)] glass-strong rounded-2xl overflow-hidden flex flex-col"
-            style={{ maxHeight: "min(500px, 70vh)" }}
+            className="fixed bottom-24 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] glass-strong rounded-2xl overflow-hidden flex flex-col"
+            style={{ maxHeight: "min(550px, 75vh)" }}
           >
             {/* Header */}
-            <div className="px-4 py-3 border-b border-border flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="font-display font-semibold text-sm">CyberSec AI Assistant</span>
+            <div className="px-4 py-3 border-b border-border flex items-center gap-2 gradient-cyber">
+              <Sparkles className="w-4 h-4 text-primary-foreground" />
+              <span className="font-display font-semibold text-sm text-primary-foreground">مساعد الأمن السيبراني</span>
+              <span className="text-[10px] text-primary-foreground/70 mr-auto">Cyber Tutor</span>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3" style={{ minHeight: "200px" }}>
               {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                >
                   <div
-                    className={`max-w-[85%] px-3 py-2 rounded-xl text-sm leading-relaxed ${
+                    className={`max-w-[85%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
                       msg.role === "user"
-                        ? "gradient-cyber text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground"
+                        ? "gradient-cyber text-primary-foreground rounded-br-md"
+                        : "bg-secondary text-secondary-foreground rounded-bl-md"
                     }`}
                   >
-                    {/* Simple markdown-like rendering */}
                     {msg.content.split("\n").map((line, j) => (
                       <p key={j} className={j > 0 ? "mt-1" : ""}>
                         {line.split(/(\*\*[^*]+\*\*)/).map((part, k) =>
                           part.startsWith("**") && part.endsWith("**") ? (
                             <strong key={k}>{part.slice(2, -2)}</strong>
+                          ) : part.startsWith("```") ? (
+                            <code key={k} className="text-xs bg-background/50 px-1.5 py-0.5 rounded font-mono">{part.replace(/```/g, '')}</code>
                           ) : (
                             <span key={k}>{part}</span>
                           )
                         )}
                       </p>
                     ))}
-                    <div className="text-[10px] opacity-50 mt-1">
+                    <div className="text-[10px] opacity-40 mt-1">
                       {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="bg-secondary rounded-xl px-4 py-2 text-sm">
-                    <span className="animate-pulse">Thinking...</span>
+                  <div className="bg-secondary rounded-2xl px-4 py-2.5 text-sm rounded-bl-md">
+                    <span className="animate-pulse">يفكر...</span>
                   </div>
                 </div>
               )}
+              <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick questions */}
-            <div className="px-4 pb-2 flex gap-1.5 overflow-x-auto">
-              {quickQuestions.map((q) => (
+            {/* Quick questions - Arabic */}
+            <div className="px-3 pb-2 flex gap-1.5 overflow-x-auto scrollbar-hide">
+              {quickQuestionsAr.map(q => (
                 <button
                   key={q}
                   onClick={() => sendMessage(q)}
-                  className="whitespace-nowrap px-2.5 py-1 rounded-lg bg-secondary text-secondary-foreground text-xs hover:bg-primary/10 hover:text-primary transition-colors"
+                  className="whitespace-nowrap px-3 py-1.5 rounded-xl bg-secondary text-secondary-foreground text-xs hover:bg-primary/10 hover:text-primary transition-colors font-medium"
+                  dir="rtl"
                 >
                   {q}
                 </button>
@@ -159,14 +180,15 @@ export default function AIAssistant() {
             <div className="p-3 border-t border-border flex gap-2">
               <input
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
-                placeholder="Ask about cybersecurity..."
-                className="flex-1 bg-secondary rounded-xl px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+                onChange={e => setInput(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && sendMessage(input)}
+                placeholder="...اسأل عن الأمن السيبراني"
+                dir="rtl"
+                className="flex-1 bg-secondary rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-primary"
               />
               <button
                 onClick={() => sendMessage(input)}
-                className="p-2 rounded-xl gradient-cyber text-primary-foreground"
+                className="p-2.5 rounded-xl gradient-cyber text-primary-foreground hover:opacity-90 transition-opacity"
                 aria-label="Send message"
               >
                 <Send className="w-4 h-4" />
