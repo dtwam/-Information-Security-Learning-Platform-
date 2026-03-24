@@ -5,9 +5,9 @@
  */
 export const unitVideos: Record<string, string> = {
   // InfoSec 1272
-  'infosec-1272-1': 'zSQnojFP7bE', // Kali Linux introduction Arabic
-  'infosec-1272-2': '8VL0K0rFgxw', // Installing Kali Linux Arabic
-  'infosec-1272-3': 'CRIUD2u5kRk', // Nmap tutorial Arabic
+  'infosec-1272-1': '4m0F8iHcdJNw-mVj', // Kali Linux introduction Arabic
+  'infosec-1272-2': 'qh8GPr12lVD6uaJ0', // Installing Kali Linux Arabic
+  'infosec-1272-3': 'FdgRrC7ZTLb-mce6', // Nmap tutorial Arabic
   'infosec-1272-4': 'pgKMoC8MpGo', // Web app pentesting Arabic
   'infosec-1272-5': 'gBe1Gfn-AzQ', // Burp Suite Arabic tutorial
   'infosec-1272-6': 'X5ySsGkfkdQ', // Metasploit Arabic
