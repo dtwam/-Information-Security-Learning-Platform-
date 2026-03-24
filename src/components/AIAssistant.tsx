@@ -22,6 +22,9 @@ const getAIResponse = (question: string): string => {
   if (q === "لخص لي" || q.includes("لخص") || q.includes("ملخص")) {
     return "**ملخص سريع** 📌\n\n**أهم المفاهيم:**\n1. 🔑 **اختبار الاختراق** = فحص أمان النظام بمحاكاة الهجمات\n2. 🛡️ **Kali Linux** = نظام التشغيل الأساسي للمختبرين\n3. 🔍 **Nmap** = أداة مسح الشبكات الأولى\n4. 🕸️ **SQL Injection** = أخطر هجمات الويب\n5. 📡 **WiFi Security** = حماية الشبكات اللاسلكية\n\nابدأ بـ Nmap ثم انتقل تدريجياً! 🚀";
   }
+  if (q === "اسألني سؤال" || q.includes("اسألني") || q.includes("اختبرني")) {
+    return "**سؤال لك يا بطل!** 🧠\n\nما هو الأمر الذي يُستخدم لمسح المنافذ المفتوحة في جهاز معين؟\n\nأ) ping\nب) nmap\nج) traceroute\nد) whois\n\n💡 **تلميح:** هذه الأداة اسمها يبدأ بحرف N وتُعتبر أول أداة يتعلمها مختبر الاختراق!\n\nاكتب إجابتك وسأخبرك إذا كانت صحيحة ✅";
+  }
 
   if (q.includes("sql injection") || q.includes("sqli") || q.includes("حقن")) {
     return "**حقن SQL** 💉\n\nتخيل أن موقع ويب يطلب منك اسم المستخدم:\n\nبدل ما تكتب اسمك، تكتب أمر لقاعدة البيانات!\n\n**مثال:**\n```\n' OR 1=1 --\n```\n\nهذا يخلي قاعدة البيانات تعطيك كل المعلومات 😱\n\n**الحماية:**\n- استخدم Prepared Statements\n- تحقق من المدخلات\n- استخدم WAF (جدار حماية تطبيقات الويب)\n\nجربها في المختبر بشكل آمن! 🧪";
@@ -45,15 +48,20 @@ const getAIResponse = (question: string): string => {
     return "**Metasploit Framework** ⚔️\n\nأشهر إطار عمل للاستغلال!\n\n**ببساطة:**\nيساعدك تختبر إذا النظام فيه ثغرات وتستغلها\n\n**الأوامر الأساسية:**\n```\nmsfconsole              # تشغيل\nsearch exploit_name     # البحث\nuse exploit/...         # اختيار\nset RHOST target_ip     # تحديد الهدف\nexploit                 # تنفيذ\n```\n\n⚠️ استخدمها فقط للأغراض التعليمية والأخلاقية!";
   }
 
+  // Check for quiz answer
+  if (q.includes("ب") && q.length < 10) {
+    return "**إجابة صحيحة!** ✅🎉\n\n**nmap** هو الأمر الصحيح لمسح المنافذ المفتوحة!\n\nأحسنت يا عميل! أنت في طريقك لتصبح خبير أمن سيبراني 🚀\n\nهل تريد سؤال آخر؟ اضغط **اسألني سؤال**";
+  }
+
   // Default Arabic welcome
-  return "مرحباً! 👋 أنا **مساعدك في الأمن السيبراني** 🛡️\n\nأقدر أساعدك في:\n- 🔍 شرح أي مفهوم أمني\n- 💻 أوامر Kali Linux\n- 🕸️ هجمات الويب (SQL Injection, XSS)\n- 📡 أمن الشبكات اللاسلكية\n- 🔧 الأدوات الأمنية\n\nاسألني أي سؤال بالعربي أو الإنجليزي! 😊";
+  return "مرحباً يا عميل! 👋 أنا **مساعدك في الأمن السيبراني** 🛡️\n\nأقدر أساعدك في:\n- 🔍 شرح أي مفهوم أمني\n- 💻 أوامر Kali Linux\n- 🕸️ هجمات الويب (SQL Injection, XSS)\n- 📡 أمن الشبكات اللاسلكية\n- 🔧 الأدوات الأمنية\n\nاسألني أي سؤال بالعربي أو الإنجليزي! 😊";
 };
 
 const quickQuestionsAr = [
   "اشرح بشكل أبسط",
   "اعطني مثال",
   "لخص لي",
-  "ما هو Nmap؟",
+  "اسألني سؤال",
 ];
 
 export default function AIAssistant() {
@@ -61,7 +69,7 @@ export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "مرحباً! 👋 أنا **مساعدك في الأمن السيبراني**\n\nاسألني أي سؤال عن المقرر وسأشرحه لك بطريقة بسيطة! 😊",
+      content: "مرحباً يا عميل! 👋 أنا **مساعدك في الأمن السيبراني**\n\nاسألني أي سؤال عن المقرر وسأشرحه لك بطريقة بسيطة! 😊",
       timestamp: new Date(),
     },
   ]);
@@ -112,9 +120,12 @@ export default function AIAssistant() {
           >
             {/* Header */}
             <div className="px-4 py-3 border-b border-border flex items-center gap-2 gradient-cyber">
-              <Sparkles className="w-4 h-4 text-primary-foreground" />
-              <span className="font-display font-semibold text-sm text-primary-foreground">مساعد الأمن السيبراني</span>
-              <span className="text-[10px] text-primary-foreground/70 mr-auto">Cyber Tutor</span>
+              <div className="relative">
+                <Sparkles className="w-4 h-4 text-primary-foreground" />
+                <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              </div>
+              <span className="font-display font-semibold text-sm text-primary-foreground">Cyber Assistant</span>
+              <span className="text-[10px] text-primary-foreground/70 mr-auto">مساعدك الذكي</span>
             </div>
 
             {/* Messages */}
@@ -154,8 +165,10 @@ export default function AIAssistant() {
               ))}
               {isTyping && (
                 <div className="flex justify-start">
-                  <div className="bg-secondary rounded-2xl px-4 py-2.5 text-sm rounded-bl-md">
-                    <span className="animate-pulse">يفكر...</span>
+                  <div className="bg-secondary rounded-2xl px-4 py-2.5 text-sm rounded-bl-md flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
                   </div>
                 </div>
               )}
@@ -168,7 +181,7 @@ export default function AIAssistant() {
                 <button
                   key={q}
                   onClick={() => sendMessage(q)}
-                  className="whitespace-nowrap px-3 py-1.5 rounded-xl bg-secondary text-secondary-foreground text-xs hover:bg-primary/10 hover:text-primary transition-colors font-medium"
+                  className="whitespace-nowrap px-3 py-1.5 rounded-xl bg-secondary text-secondary-foreground text-xs hover:bg-primary/10 hover:text-primary transition-all hover:scale-105 font-medium"
                   dir="rtl"
                 >
                   {q}
@@ -184,11 +197,11 @@ export default function AIAssistant() {
                 onKeyDown={e => e.key === "Enter" && sendMessage(input)}
                 placeholder="...اسأل عن الأمن السيبراني"
                 dir="rtl"
-                className="flex-1 bg-secondary rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-primary"
+                className="flex-1 bg-secondary rounded-xl px-3 py-2.5 text-sm outline-none focus:ring-1 focus:ring-primary transition-shadow"
               />
               <button
                 onClick={() => sendMessage(input)}
-                className="p-2.5 rounded-xl gradient-cyber text-primary-foreground hover:opacity-90 transition-opacity"
+                className="p-2.5 rounded-xl gradient-cyber text-primary-foreground hover:opacity-90 hover:scale-105 transition-all"
                 aria-label="Send message"
               >
                 <Send className="w-4 h-4" />

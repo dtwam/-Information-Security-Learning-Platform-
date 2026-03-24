@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import AIAssistant from "@/components/AIAssistant";
 import Footer from "@/components/Footer";
+import CyberBackground from "@/components/CyberBackground";
+import CyberIntro from "@/components/CyberIntro";
 import HomePage from "@/pages/HomePage";
 import CoursesPage from "@/pages/CoursesPage";
 import CourseDetailPage from "@/pages/CourseDetailPage";
@@ -23,7 +25,9 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <CyberIntro />
       <BrowserRouter>
+        <CyberBackground />
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />

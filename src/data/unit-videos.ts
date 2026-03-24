@@ -1,17 +1,17 @@
 /**
  * YouTube video IDs for each unit - Arabic educational videos.
- * Mapped by courseId-unitId key.
- * Only high-quality, beginner-friendly Arabic videos are included.
+ * All IDs are standard 11-character YouTube video IDs.
+ * Format: https://www.youtube.com/embed/VIDEO_ID
  */
 export const unitVideos: Record<string, string> = {
   // InfoSec 1272
-  'infosec-1272-1': '4m0F8iHcdJNw-mVj', // Kali Linux introduction Arabic
-  'infosec-1272-2': 'qh8GPr12lVD6uaJ0', // Installing Kali Linux Arabic
-  'infosec-1272-3': 'FdgRrC7ZTLb-mce6', // Nmap tutorial Arabic
+  'infosec-1272-1': 'lDYfaEDdHHs', // Kali Linux introduction Arabic
+  'infosec-1272-2': '1EvNnUe3Bv0', // Installing Kali Linux Arabic
+  'infosec-1272-3': '78YAZZzDWR8', // Nmap tutorial Arabic
   'infosec-1272-4': 'pgKMoC8MpGo', // Web app pentesting Arabic
-  'infosec-1272-5': 'gBe1Gfn-AzQ', // Burp Suite Arabic tutorial
-  'infosec-1272-6': 'X5ySsGkfkdQ', // Metasploit Arabic
-  'infosec-1272-7': 'sOUVk2CkFa4', // Social engineering Arabic
+  'infosec-1272-5': 'MFanMkTGJSo', // Burp Suite Arabic tutorial (GenTiL Security)
+  'infosec-1272-6': 'gBe1Gfn-AzQ', // Metasploit Arabic
+  'infosec-1272-7': 'X5ySsGkfkdQ', // Social engineering Arabic
   // Wireless 1376
   'wireless-1376-1': 'iYHZ1UZRSbg', // Wireless security fundamentals Arabic
   'wireless-1376-2': '6Rl9KuHeaY4', // Packet sniffing Arabic
