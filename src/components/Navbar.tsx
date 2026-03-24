@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, Search } from "lucide-react";
+import { Menu, X, Sun, Moon, Search, Shield } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import universityLogo from "@/assets/university-logo.png";
 
 const navLinks = [
-  { to: "/", label: "Home" },
-  { to: "/courses", label: "Courses" },
+  { to: "/", label: "HQ" },
+  { to: "/courses", label: "Missions" },
   { to: "/lab", label: "Cyber Lab" },
-  { to: "/tools", label: "Tools" },
-  { to: "/dashboard", label: "Dashboard" },
+  { to: "/tools", label: "Arsenal" },
+  { to: "/dashboard", label: "Intel" },
 ];
 
 export default function Navbar() {
@@ -23,12 +23,17 @@ export default function Navbar() {
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         {/* Logo + University Name */}
         <Link to="/" className="flex items-center gap-2 group">
-          <img src={universityLogo} alt="Al-Quds Open University" className="w-8 h-8 rounded-full object-cover" />
+          <div className="relative">
+            <img src={universityLogo} alt="Al-Quds Open University" className="w-8 h-8 rounded-full object-cover" />
+            <div className="absolute inset-0 rounded-full border border-primary/30 group-hover:border-primary/60 transition-colors" />
+          </div>
           <div className="flex flex-col leading-tight">
             <span className="font-display font-bold text-sm gradient-cyber-text">
               Al-Quds Open University
             </span>
-            <span className="text-[10px] text-muted-foreground hidden sm:block">CyberSec Academy</span>
+            <span className="text-[10px] text-muted-foreground hidden sm:flex items-center gap-1">
+              <Shield className="w-2.5 h-2.5" /> CyberSec Academy
+            </span>
           </div>
         </Link>
 
@@ -38,9 +43,9 @@ export default function Navbar() {
             <Link
               key={link.to}
               to={link.to}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 location.pathname === link.to || (link.to !== "/" && location.pathname.startsWith(link.to))
-                  ? "bg-primary/10 text-primary"
+                  ? "bg-primary/10 text-primary cyber-glow"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary"
               }`}
             >
