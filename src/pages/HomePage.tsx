@@ -19,7 +19,7 @@ export default function HomePage() {
     hidden: { opacity: 0, y: 40, scale: 0.9, filter: "blur(4px)" },
     visible: {
       opacity: 1, y: 0, scale: 1, filter: "blur(0px)",
-      transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+      transition: { duration: 0.6, ease: "easeOut" as const },
     },
   };
 
