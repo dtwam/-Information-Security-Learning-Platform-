@@ -4,7 +4,8 @@ export function useTheme() {
   const [isDark, setIsDark] = useState(() => {
     const stored = localStorage.getItem("cybersec-theme");
     if (stored) return stored === "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // Default to light mode
+    return false;
   });
 
   useEffect(() => {
