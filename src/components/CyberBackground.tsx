@@ -66,9 +66,7 @@ export default function CyberBackground() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = isDark
-          ? `rgba(0,220,255,${p.alpha})`
-          : `rgba(0,150,200,${p.alpha * 0.6})`;
+        ctx.fillStyle = `rgba(0,240,255,${p.alpha})`;
         ctx.fill();
 
         // Connect nearby particles
