@@ -37,10 +37,9 @@ export default function CyberBackground() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw grid lines
-      const isDark = document.documentElement.classList.contains("dark");
-      const gridColor = isDark ? "rgba(0,220,255,0.03)" : "rgba(0,150,200,0.04)";
-      const lineColor = isDark ? "rgba(0,220,255,0.15)" : "rgba(0,150,200,0.08)";
-      const step = 60;
+      const gridColor = "rgba(0,240,255,0.02)";
+      const lineColor = "rgba(0,240,255,0.06)";
+      const step = 80;
 
       ctx.strokeStyle = gridColor;
       ctx.lineWidth = 0.5;
