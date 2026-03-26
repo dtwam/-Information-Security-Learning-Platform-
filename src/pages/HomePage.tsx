@@ -1,52 +1,101 @@
-// Export-ready component — Landing page
 import { motion } from "framer-motion";
-import { ArrowRight, Terminal, Shield, BookOpen, Brain, Target, Cpu, Lock, Rocket } from "lucide-react";
+import { ArrowRight, Terminal, Shield, BookOpen, Zap, Brain, Target, Cpu, Lock, Rocket } from "lucide-react";
 import { Link } from "react-router-dom";
 import { allCourses } from "@/data/index";
+import universityLogo from "@/assets/university-logo.png";
 import { useProgress } from "@/hooks/useProgress";
-import HeroSection from "@/components/HeroSection";
-import zer0Img from "@/assets/zer0-mascot.png";
 
 export default function HomePage() {
   const { progress } = useProgress();
   const totalCompleted = progress.completedUnits.length;
   const totalUnits = allCourses.reduce((a, c) => a + c.totalUnits, 0);
 
-  const containerVariants = { hidden: {}, visible: { transition: { staggerChildren: 0.12 } } };
+  const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.12 } },
+  };
+
   const cardVariants = {
     hidden: { opacity: 0, y: 40, scale: 0.9, filter: "blur(4px)" },
-    visible: { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", transition: { duration: 0.6, ease: "easeOut" as const } },
+    visible: {
+      opacity: 1, y: 0, scale: 1, filter: "blur(0px)",
+      transition: { duration: 0.6, ease: "easeOut" as const },
+    },
   };
-  const fadeUp = { hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  };
 
   return (
     <main className="min-h-screen relative z-10">
-      <HeroSection />
+      {/* ─── HERO ─── */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+              {/* University logo */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="flex justify-center mb-8"
+              >
+                <img src={universityLogo} alt="Al-Quds Open University" className="w-16 h-16 rounded-full object-cover ring-2 ring-primary/30" />
+              </motion.div>
 
-      {/* Stats bar */}
-      <section className="py-12 px-4 relative z-10">
-        <div className="container mx-auto max-w-md">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="grid grid-cols-3 gap-8"
-          >
-            {[
-              { value: `${allCourses.length}`, label: "مقررات" },
-              { value: `${totalUnits}`, label: "وحدات" },
-              { value: `${totalCompleted}`, label: "مكتملة" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-2xl font-display font-bold text-primary cyber-glow-text">{stat.value}</div>
-                <div className="text-sm text-muted-foreground font-arabic">{stat.label}</div>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight mb-8">
+                <span className="gradient-cyber-text cyber-glow-text">CyberSec</span>{" "}
+                <span className="text-foreground">Academy</span>
+              </h1>
+
+              <p className="font-arabic text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed" dir="rtl">
+                منصة تعليمية متخصصة من جامعة القدس المفتوحة
+                <br />
+                لتدريس مقررات الأمن السيبراني بأسلوب تفاعلي حديث
+              </p>
+
+              <div className="flex flex-wrap gap-4 justify-center">
+                <Link
+                  to="/courses"
+                  className="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-xl gradient-cyber text-primary-foreground font-semibold text-base"
+                >
+                  <Rocket className="w-5 h-5" /> ابدأ المهمة 🚀
+                </Link>
+                <Link
+                  to="/lab"
+                  className="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-xl glass font-semibold text-foreground text-base"
+                >
+                  <Terminal className="w-5 h-5" /> افتح المختبر 💻
+                </Link>
               </div>
-            ))}
-          </motion.div>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="grid grid-cols-3 gap-8 mt-16 max-w-sm mx-auto"
+            >
+              {[
+                { value: `${allCourses.length}`, label: "مقررات" },
+                { value: `${totalUnits}`, label: "وحدات" },
+                { value: `${totalCompleted}`, label: "مكتملة" },
+              ].map((stat) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-2xl font-display font-bold text-primary cyber-glow-text">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground font-arabic">{stat.label}</div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* Why this platform */}
+      {/* ─── WHY THIS PLATFORM ─── */}
       <section className="py-24 px-4 relative z-10">
         <div className="container mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="text-center mb-16">
@@ -57,16 +106,23 @@ export default function HomePage() {
               تجربة تعليمية فريدة تجمع بين المحتوى الأكاديمي والتطبيق العملي
             </p>
           </motion.div>
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
+          >
             {[
               { icon: BookOpen, title: "محتوى أكاديمي", desc: "مبني على مقررات جامعة القدس المفتوحة" },
               { icon: Terminal, title: "مختبر تفاعلي", desc: "تدرب على أدوات الأمن السيبراني الحقيقية" },
-              { icon: Brain, title: "مساعد ذكي", desc: "Zer0 يشرح لك المفاهيم بالعربية" },
+              { icon: Brain, title: "مساعد ذكي", desc: "مساعد AI يشرح لك المفاهيم بالعربية" },
               { icon: Target, title: "تعلم عملي", desc: "تمارين ومحاكاة لسيناريوهات حقيقية" },
-            ].map((item) => (
-              <motion.div key={item.title} variants={cardVariants} className="glass rounded-2xl p-6 text-center card-hover neon-border">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <item.icon className="w-6 h-6 text-primary" />
+            ].map((item, i) => (
+              <motion.div key={item.title} variants={cardVariants} className="glass rounded-2xl p-6 text-center card-hover">
+                <div className="w-12 h-12 mx-auto mb-4 rounded-xl gradient-cyber flex items-center justify-center">
+                  <item.icon className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <h3 className="font-arabic font-bold text-base mb-2">{item.title}</h3>
                 <p className="text-sm text-muted-foreground font-arabic" dir="rtl">{item.desc}</p>
@@ -76,19 +132,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Courses */}
+      {/* ─── ACTIVE MISSIONS (COURSES) ─── */}
       <section className="py-24 px-4 relative z-10">
         <div className="container mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="text-center mb-16">
             <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
               <span className="gradient-cyber-text">المقررات</span> المتاحة
             </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto font-arabic" dir="rtl">اختر مقررك لبدء رحلة التعلم</p>
+            <p className="text-muted-foreground max-w-lg mx-auto font-arabic" dir="rtl">
+              اختر مقررك لبدء رحلة التعلم
+            </p>
           </motion.div>
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"
+          >
             {allCourses.map((course) => (
               <motion.div key={course.id} variants={cardVariants}>
-                <Link to={`/courses/${course.id}`} className="block glass rounded-2xl p-6 card-hover group neon-border">
+                <Link to={`/courses/${course.id}`} className="block glass rounded-2xl p-6 card-hover group">
                   <div className="flex items-start gap-4">
                     <div className="text-4xl">{course.icon}</div>
                     <div className="flex-1">
@@ -108,13 +173,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* What you will learn */}
+      {/* ─── WHAT YOU WILL LEARN ─── */}
       <section className="py-24 px-4 relative z-10">
         <div className="container mx-auto">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">ماذا <span className="gradient-cyber-text">ستتعلم</span>؟</h2>
+            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
+              ماذا <span className="gradient-cyber-text">ستتعلم</span>؟
+            </h2>
           </motion.div>
-          <motion.div variants={containerVariants} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto"
+          >
             {[
               { icon: Shield, label: "أساسيات أمن المعلومات" },
               { icon: Lock, label: "التشفير وحماية البيانات" },
@@ -123,7 +197,7 @@ export default function HomePage() {
               { icon: Terminal, label: "أدوات الأمن السيبراني" },
               { icon: Brain, label: "تحليل الثغرات الأمنية" },
             ].map((item) => (
-              <motion.div key={item.label} variants={cardVariants} className="glass rounded-2xl p-5 flex items-center gap-4 card-hover neon-border">
+              <motion.div key={item.label} variants={cardVariants} className="glass rounded-2xl p-5 flex items-center gap-4 card-hover">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                   <item.icon className="w-5 h-5 text-primary" />
                 </div>
@@ -134,13 +208,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Zer0 section */}
+      {/* ─── AI ASSISTANT SECTION ─── */}
       <section className="py-24 px-4 relative z-10">
         <div className="container mx-auto max-w-4xl">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="glass rounded-3xl p-8 sm:p-12 text-center neon-border">
-            <img src={zer0Img} alt="Zer0" className="w-20 h-20 mx-auto mb-6 object-contain drop-shadow-[0_0_20px_hsl(185_100%_50%/0.4)]" />
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={fadeUp}
+            className="glass rounded-3xl p-8 sm:p-12 text-center"
+          >
+            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl gradient-cyber flex items-center justify-center">
+              <Brain className="w-8 h-8 text-primary-foreground" />
+            </div>
             <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
-              <span className="gradient-cyber-text">Zer0</span>
+              <span className="gradient-cyber-text">Cyber Assistant</span>
             </h2>
             <p className="font-arabic text-muted-foreground max-w-lg mx-auto mb-6 leading-relaxed" dir="rtl">
               مساعدك الذكي في رحلة تعلم الأمن السيبراني. اسأله أي سؤال وسيشرح لك بالعربية بأسلوب بسيط ومفهوم.
@@ -154,15 +236,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* ─── FINAL CTA ─── */}
       <section className="py-24 px-4 relative z-10">
         <div className="container mx-auto max-w-2xl text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
             <h2 className="text-2xl sm:text-3xl font-display font-bold mb-6">
               هل أنت مستعد <span className="gradient-cyber-text">للبدء</span>؟
             </h2>
-            <p className="font-arabic text-muted-foreground mb-8" dir="rtl">انضم الآن وابدأ رحلتك في عالم الأمن السيبراني</p>
-            <Link to="/courses" className="btn-glow inline-flex items-center gap-2 px-8 py-4 rounded-xl gradient-cyber text-primary-foreground font-semibold text-lg">
+            <p className="font-arabic text-muted-foreground mb-8" dir="rtl">
+              انضم الآن وابدأ رحلتك في عالم الأمن السيبراني
+            </p>
+            <Link
+              to="/courses"
+              className="btn-glow inline-flex items-center gap-2 px-8 py-4 rounded-xl gradient-cyber text-primary-foreground font-semibold text-lg"
+            >
               🚀 ابدأ التعلم الآن <ArrowRight className="w-5 h-5" />
             </Link>
           </motion.div>

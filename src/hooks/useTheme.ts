@@ -1,18 +1,19 @@
-// Export-ready component — always dark cyberpunk theme
 import { useState, useEffect } from "react";
 
 export function useTheme() {
-  // Always dark — toggle kept for UI compatibility
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(() => {
+    const stored = localStorage.getItem("cybersec-theme");
+    if (stored) return stored === "dark";
+    // Default to light mode
+    return false;
+  });
 
   useEffect(() => {
-    document.documentElement.classList.add("dark");
-    localStorage.setItem("cybersec-theme", "dark");
-  }, []);
+    document.documentElement.classList.toggle("dark", isDark);
+    localStorage.setItem("cybersec-theme", isDark ? "dark" : "light");
+  }, [isDark]);
 
-  const toggleTheme = () => {
-    // No-op: always dark cyberpunk
-  };
+  const toggleTheme = () => setIsDark((prev) => !prev);
 
-  return { isDark: true, toggleTheme };
+  return { isDark, toggleTheme };
 }
