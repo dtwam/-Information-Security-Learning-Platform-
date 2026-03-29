@@ -4,8 +4,8 @@ export function useTheme() {
   const [isDark, setIsDark] = useState(() => {
     const stored = localStorage.getItem("cybersec-theme");
     if (stored) return stored === "dark";
-    // Default to light mode
-    return false;
+    // Default to dark mode for cyberpunk theme
+    return true;
   });
 
   useEffect(() => {
