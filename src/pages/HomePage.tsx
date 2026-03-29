@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Terminal, Shield, BookOpen, Zap, Brain, Target, Cpu, Lock, Rocket } from "lucide-react";
+import { ArrowRight, Terminal, Shield, BookOpen, Zap, Brain, Target, Cpu, Lock, Rocket, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { allCourses } from "@/data/index";
 import universityLogo from "@/assets/university-logo.png";
+import zer0Avatar from "@/assets/zer0-avatar.png";
 import { useProgress } from "@/hooks/useProgress";
 
 export default function HomePage() {
@@ -33,17 +34,52 @@ export default function HomePage() {
       {/* ─── HERO ─── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
+        {/* Radial glow behind Zer0 */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="w-[600px] h-[600px] rounded-full opacity-20" style={{ background: "radial-gradient(circle, hsl(185 100% 50% / 0.4), transparent 70%)" }} />
+        </div>
+
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="max-w-4xl mx-auto text-center">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              {/* University logo */}
+              {/* Zer0 mascot floating */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.7 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
                 className="flex justify-center mb-8"
               >
-                <img src={universityLogo} alt="Al-Quds Open University" className="w-16 h-16 rounded-full object-cover ring-2 ring-primary/30" />
+                <motion.div
+                  animate={{ y: [0, -12, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="relative"
+                >
+                  <img
+                    src={zer0Avatar}
+                    alt="Zer0 - AI Companion"
+                    className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover"
+                    style={{
+                      boxShadow: "0 0 40px hsl(185 100% 50% / 0.4), 0 0 80px hsl(185 100% 50% / 0.15)",
+                      border: "2px solid hsl(185 100% 50% / 0.3)",
+                    }}
+                  />
+                  {/* Pulsing ring */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full border-2 border-primary/30"
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0, 0.5] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  />
+                </motion.div>
+              </motion.div>
+
+              {/* University logo small */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="flex justify-center mb-4"
+              >
+                <img src={universityLogo} alt="Al-Quds Open University" className="w-10 h-10 rounded-full object-cover ring-1 ring-primary/20 opacity-70" />
               </motion.div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight mb-8">
@@ -66,7 +102,7 @@ export default function HomePage() {
                 </Link>
                 <Link
                   to="/lab"
-                  className="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-xl glass font-semibold text-foreground text-base"
+                  className="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-xl glass font-semibold text-foreground text-base neon-border"
                 >
                   <Terminal className="w-5 h-5" /> افتح المختبر 💻
                 </Link>
@@ -117,10 +153,10 @@ export default function HomePage() {
             {[
               { icon: BookOpen, title: "محتوى أكاديمي", desc: "مبني على مقررات جامعة القدس المفتوحة" },
               { icon: Terminal, title: "مختبر تفاعلي", desc: "تدرب على أدوات الأمن السيبراني الحقيقية" },
-              { icon: Brain, title: "مساعد ذكي", desc: "مساعد AI يشرح لك المفاهيم بالعربية" },
+              { icon: Brain, title: "مساعد ذكي", desc: "Zer0 يشرح لك المفاهيم بالعربية" },
               { icon: Target, title: "تعلم عملي", desc: "تمارين ومحاكاة لسيناريوهات حقيقية" },
-            ].map((item, i) => (
-              <motion.div key={item.title} variants={cardVariants} className="glass rounded-2xl p-6 text-center card-hover">
+            ].map((item) => (
+              <motion.div key={item.title} variants={cardVariants} className="glass rounded-2xl p-6 text-center card-hover neon-border">
                 <div className="w-12 h-12 mx-auto mb-4 rounded-xl gradient-cyber flex items-center justify-center">
                   <item.icon className="w-6 h-6 text-primary-foreground" />
                 </div>
@@ -151,24 +187,34 @@ export default function HomePage() {
             viewport={{ once: true, margin: "-50px" }}
             className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"
           >
-            {allCourses.map((course) => (
-              <motion.div key={course.id} variants={cardVariants}>
-                <Link to={`/courses/${course.id}`} className="block glass rounded-2xl p-6 card-hover group">
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl">{course.icon}</div>
-                    <div className="flex-1">
-                      <h3 className="font-display font-semibold text-lg mb-1 group-hover:text-primary transition-colors">{course.title}</h3>
-                      <p className="text-sm text-muted-foreground font-arabic mb-2" dir="rtl">{course.titleAr}</p>
-                      <p className="text-sm text-muted-foreground mb-3">{course.description}</p>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> {course.totalUnits} objectives</span>
-                        <span className="px-2 py-0.5 rounded bg-secondary text-secondary-foreground">{course.code}</span>
+            {allCourses.map((course) => {
+              const completed = course.units.filter(u => progress.completedUnits.includes(`${course.id}-${u.id}`)).length;
+              const pct = Math.round((completed / course.totalUnits) * 100);
+              return (
+                <motion.div key={course.id} variants={cardVariants}>
+                  <Link to={`/courses/${course.id}`} className="block glass rounded-2xl p-6 card-hover group neon-border">
+                    <div className="flex items-start gap-4">
+                      <div className="text-4xl">{course.icon}</div>
+                      <div className="flex-1">
+                        <h3 className="font-display font-semibold text-lg mb-1 group-hover:text-primary transition-colors">{course.title}</h3>
+                        <p className="text-sm text-muted-foreground font-arabic mb-2" dir="rtl">{course.titleAr}</p>
+                        <p className="text-sm text-muted-foreground mb-3">{course.description}</p>
+                        {/* Progress bar */}
+                        <div className="mt-2">
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-muted-foreground">{completed}/{course.totalUnits}</span>
+                            <span className="text-primary font-semibold">{pct}%</span>
+                          </div>
+                          <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+                            <motion.div className="h-full gradient-cyber rounded-full" initial={{ width: 0 }} whileInView={{ width: `${pct}%` }} transition={{ duration: 0.8 }} />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
@@ -197,7 +243,7 @@ export default function HomePage() {
               { icon: Terminal, label: "أدوات الأمن السيبراني" },
               { icon: Brain, label: "تحليل الثغرات الأمنية" },
             ].map((item) => (
-              <motion.div key={item.label} variants={cardVariants} className="glass rounded-2xl p-5 flex items-center gap-4 card-hover">
+              <motion.div key={item.label} variants={cardVariants} className="glass rounded-2xl p-5 flex items-center gap-4 card-hover neon-border">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                   <item.icon className="w-5 h-5 text-primary" />
                 </div>
@@ -208,7 +254,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── AI ASSISTANT SECTION ─── */}
+      {/* ─── ZER0 AI SECTION ─── */}
       <section className="py-24 px-4 relative z-10">
         <div className="container mx-auto max-w-4xl">
           <motion.div
@@ -216,21 +262,29 @@ export default function HomePage() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeUp}
-            className="glass rounded-3xl p-8 sm:p-12 text-center"
+            className="glass rounded-3xl p-8 sm:p-12 text-center neon-border"
           >
-            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl gradient-cyber flex items-center justify-center">
-              <Brain className="w-8 h-8 text-primary-foreground" />
-            </div>
+            <motion.img
+              src={zer0Avatar}
+              alt="Zer0"
+              className="w-20 h-20 mx-auto mb-6 rounded-full object-cover"
+              style={{ boxShadow: "0 0 30px hsl(185 100% 50% / 0.4)" }}
+              animate={{ y: [0, -6, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
             <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
-              <span className="gradient-cyber-text">Cyber Assistant</span>
+              <span className="gradient-cyber-text">Zer0</span>
             </h2>
+            <p className="font-arabic text-muted-foreground max-w-lg mx-auto mb-2 text-sm" dir="rtl">
+              رفيقك الذكي في رحلة تعلم الأمن السيبراني
+            </p>
             <p className="font-arabic text-muted-foreground max-w-lg mx-auto mb-6 leading-relaxed" dir="rtl">
-              مساعدك الذكي في رحلة تعلم الأمن السيبراني. اسأله أي سؤال وسيشرح لك بالعربية بأسلوب بسيط ومفهوم.
+              اسأله أي سؤال وسيشرح لك بالعربية بأسلوب بسيط ومفهوم
             </p>
             <div className="flex flex-wrap gap-3 justify-center font-arabic text-sm">
-              <span className="px-4 py-2 rounded-xl bg-primary/10 text-primary">اشرح بشكل أبسط</span>
-              <span className="px-4 py-2 rounded-xl bg-accent/10 text-accent">اعطني مثال</span>
-              <span className="px-4 py-2 rounded-xl bg-cyber-success/10 text-cyber-success">لخص لي</span>
+              <span className="px-4 py-2 rounded-xl border border-primary/20 text-primary bg-primary/5">اشرح بشكل أبسط</span>
+              <span className="px-4 py-2 rounded-xl border border-accent/20 text-accent bg-accent/5">اعطني مثال</span>
+              <span className="px-4 py-2 rounded-xl border border-cyber-success/20 text-cyber-success bg-cyber-success/5">لخص لي</span>
             </div>
           </motion.div>
         </div>
