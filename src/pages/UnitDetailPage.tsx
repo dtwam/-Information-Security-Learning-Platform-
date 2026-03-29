@@ -1,22 +1,21 @@
-/** Unit detail page - immersive learning experience with sections */
+/** Unit detail page - immersive learning experience with sections and Ask Zer0 */
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft, ArrowRight, CheckCircle2, HelpCircle, BookOpen,
   Terminal, Lightbulb, Target, FileText, Play, ChevronRight,
-  Star, Trophy, Zap,
+  Star, Trophy, Zap, MessageCircle,
 } from "lucide-react";
 import { getUnit, getCourseById } from "@/data/index";
 import { unitVideos, unitObjectives, unitSummaries } from "@/data/unit-videos";
 import { useProgress } from "@/hooks/useProgress";
+import zer0Avatar from "@/assets/zer0-avatar.png";
 
-/** Smooth scroll to section */
 function scrollToSection(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-/** Section wrapper with fade-in animation */
 function Section({ id, icon, title, children, delay = 0 }: {
   id: string; icon: React.ReactNode; title: string; children: React.ReactNode; delay?: number;
 }) {
@@ -50,7 +49,6 @@ export default function UnitDetailPage() {
   const [showConcepts, setShowConcepts] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to top on unit change
   useEffect(() => {
     topRef.current?.scrollIntoView({ behavior: "smooth" });
     setQuizStarted(false);
@@ -76,12 +74,10 @@ export default function UnitDetailPage() {
   const objective = unit.objectiveAr || unitObjectives[unitKey];
   const summary = unit.summaryAr || unitSummaries[unitKey];
 
-  // Prev/Next navigation
   const currentIdx = course.units.findIndex(u => u.id === unit.id);
   const prevUnit = currentIdx > 0 ? course.units[currentIdx - 1] : null;
   const nextUnit = currentIdx < course.units.length - 1 ? course.units[currentIdx + 1] : null;
 
-  // XP calculation
   const baseXP = isCompleted ? 100 : 0;
   const quizXP = progress.quizScores[unit.id] ? Math.round(progress.quizScores[unit.id] * 0.5) : 0;
   const totalXP = baseXP + quizXP;
@@ -102,7 +98,13 @@ export default function UnitDetailPage() {
     }, 1000);
   };
 
-  // Section quick-nav items
+  const openZer0 = () => {
+    window.dispatchEvent(new CustomEvent("zer0-open", { detail: unit.title }));
+    // Also simulate clicking the Zer0 FAB
+    const fab = document.querySelector('[aria-label="Open Zer0 AI assistant"]') as HTMLButtonElement;
+    if (fab) fab.click();
+  };
+
   const sections = [
     { id: "objective", label: "🎯 الهدف" },
     { id: "content", label: "📘 المحتوى" },
@@ -117,16 +119,16 @@ export default function UnitDetailPage() {
       <div className="container mx-auto max-w-3xl">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-muted-foreground mb-4 flex-wrap">
-          <Link to="/courses" className="hover:text-foreground transition-colors">Courses</Link>
+          <Link to="/courses" className="hover:text-primary transition-colors">Courses</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to={`/courses/${course.id}`} className="hover:text-foreground transition-colors">{course.title}</Link>
+          <Link to={`/courses/${course.id}`} className="hover:text-primary transition-colors">{course.title}</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-foreground font-medium">Unit {unit.id}</span>
         </nav>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          {/* ===== HEADER ===== */}
-          <div className="glass rounded-2xl p-6 mb-6">
+          {/* HEADER */}
+          <div className="glass rounded-2xl p-6 mb-6 neon-border">
             <div className="flex items-start gap-4">
               <span className="text-4xl">{unit.icon}</span>
               <div className="flex-1 min-w-0">
@@ -134,14 +136,14 @@ export default function UnitDetailPage() {
                 <p className="text-sm text-primary font-mono mt-1" dir="rtl">{unit.titleAr}</p>
                 <div className="flex flex-wrap gap-1.5 mt-3">
                   {unit.topics.map(t => (
-                    <span key={t} className="px-2.5 py-1 rounded-lg bg-secondary text-secondary-foreground text-xs">{t}</span>
+                    <span key={t} className="px-2.5 py-1 rounded-lg bg-secondary text-secondary-foreground text-xs border border-primary/10">{t}</span>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* XP & Progress bar */}
-            <div className="mt-4 flex items-center gap-3">
+            {/* XP + Ask Zer0 */}
+            <div className="mt-4 flex items-center gap-3 flex-wrap">
               <div className="flex items-center gap-1.5 text-xs">
                 <Zap className="w-3.5 h-3.5 text-primary" />
                 <span className="font-semibold text-primary">{totalXP} XP</span>
@@ -152,31 +154,36 @@ export default function UnitDetailPage() {
                   <span>مكتملة</span>
                 </div>
               )}
+              <button
+                onClick={openZer0}
+                className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold border border-primary/20 text-primary hover:bg-primary/10 transition-colors"
+              >
+                <img src={zer0Avatar} alt="" className="w-5 h-5 rounded-full object-cover" />
+                Ask Zer0
+              </button>
             </div>
           </div>
 
-          {/* ===== SECTION NAV ===== */}
+          {/* SECTION NAV */}
           <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
             {sections.map(s => (
               <button
                 key={s.id}
                 onClick={() => scrollToSection(s.id)}
-                className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-secondary text-secondary-foreground text-xs font-medium hover:bg-primary/10 hover:text-primary transition-colors"
+                className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-secondary text-secondary-foreground text-xs font-medium hover:bg-primary/10 hover:text-primary transition-colors border border-primary/10"
               >
                 {s.label}
               </button>
             ))}
           </div>
 
-          {/* ===== SECTIONS ===== */}
+          {/* SECTIONS */}
           <div className="space-y-8">
             {/* 🎯 Objective */}
             {objective && (
               <Section id="objective" icon={<Target className="w-5 h-5" />} title="🎯 هدف الدرس" delay={0.1}>
-                <div className="glass rounded-2xl p-5">
-                  <p className="text-sm leading-relaxed" dir="rtl" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
-                    {objective}
-                  </p>
+                <div className="glass rounded-2xl p-5 neon-border">
+                  <p className="text-sm leading-relaxed font-arabic" dir="rtl">{objective}</p>
                 </div>
               </Section>
             )}
@@ -190,11 +197,11 @@ export default function UnitDetailPage() {
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 + i * 0.08 }}
-                    className="glass rounded-2xl p-6"
+                    className="glass rounded-2xl p-6 neon-border"
                   >
                     <h3 className="font-display font-semibold mb-1">{section.heading}</h3>
                     <h4 className="text-sm text-primary font-mono mb-4" dir="rtl">{section.headingAr}</h4>
-                    <div className="text-sm leading-relaxed whitespace-pre-line" dir="rtl" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
+                    <div className="text-sm leading-relaxed whitespace-pre-line font-arabic" dir="rtl">
                       {section.body}
                     </div>
                     {section.commands && section.commands.length > 0 && (
@@ -218,7 +225,7 @@ export default function UnitDetailPage() {
             {/* 🎥 Video */}
             {videoId && (
               <Section id="video" icon={<Play className="w-5 h-5" />} title="🎥 شرح بالفيديو" delay={0.25}>
-                <div className="glass rounded-2xl p-4 overflow-hidden">
+                <div className="glass rounded-2xl p-4 overflow-hidden neon-border">
                   <div className="relative w-full rounded-xl overflow-hidden" style={{ paddingBottom: "56.25%" }}>
                     <iframe
                       className="absolute inset-0 w-full h-full rounded-xl"
@@ -229,7 +236,7 @@ export default function UnitDetailPage() {
                       loading="lazy"
                     />
                   </div>
-                  <p className="text-xs text-muted-foreground mt-3 text-center" dir="rtl">
+                  <p className="text-xs text-muted-foreground mt-3 text-center font-arabic" dir="rtl">
                     فيديو تعليمي باللغة العربية لشرح محتوى الوحدة
                   </p>
                 </div>
@@ -238,10 +245,10 @@ export default function UnitDetailPage() {
 
             {/* 🧪 Practical Example */}
             <Section id="practical" icon={<Terminal className="w-5 h-5" />} title="🧪 مثال عملي" delay={0.3}>
-              <div className="glass rounded-2xl p-5 border-2 border-dashed border-border">
+              <div className="glass rounded-2xl p-5 border-2 border-dashed border-primary/20">
                 <div className="text-center py-6">
                   <Terminal className="w-10 h-10 text-muted-foreground mx-auto mb-3 opacity-50" />
-                  <p className="text-sm text-muted-foreground" dir="rtl">
+                  <p className="text-sm text-muted-foreground font-arabic" dir="rtl">
                     جرّب الأوامر في المختبر العملي
                   </p>
                   <Link
@@ -272,14 +279,14 @@ export default function UnitDetailPage() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.05 }}
-                        className="glass rounded-xl p-4 hover:cyber-glow transition-shadow"
+                        className="glass rounded-xl p-4 neon-border card-hover"
                       >
                         <div className="font-semibold text-sm">{c.name}</div>
                         <div className="text-xs text-primary font-mono" dir="rtl">{c.nameAr}</div>
-                        <p className="text-xs text-muted-foreground mt-2" dir="rtl">{c.simple}</p>
+                        <p className="text-xs text-muted-foreground mt-2 font-arabic" dir="rtl">{c.simple}</p>
                         <details className="mt-2">
                           <summary className="text-xs text-primary cursor-pointer hover:underline">المزيد من التفاصيل</summary>
-                          <p className="text-xs text-muted-foreground mt-1" dir="rtl">{c.detailed}</p>
+                          <p className="text-xs text-muted-foreground mt-1 font-arabic" dir="rtl">{c.detailed}</p>
                           {c.example && <p className="text-xs font-mono mt-1 text-primary/80">{c.example}</p>}
                         </details>
                       </motion.div>
@@ -292,16 +299,14 @@ export default function UnitDetailPage() {
             {/* 📌 Summary */}
             {summary && (
               <Section id="summary" icon={<FileText className="w-5 h-5" />} title="📌 ملخص سريع" delay={0.4}>
-                <div className="glass rounded-2xl p-5 border-l-4 border-primary">
-                  <p className="text-sm leading-relaxed" dir="rtl" style={{ fontFamily: "'Noto Sans Arabic', sans-serif" }}>
-                    {summary}
-                  </p>
+                <div className="glass rounded-2xl p-5 border-l-4 border-primary neon-border">
+                  <p className="text-sm leading-relaxed font-arabic" dir="rtl">{summary}</p>
                 </div>
               </Section>
             )}
 
-            {/* ✅ Complete button */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
+            {/* ✅ Complete + Ask Zer0 */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }} className="space-y-3">
               <button
                 onClick={() => completeUnit(unitKey)}
                 className={`w-full py-3.5 rounded-2xl font-semibold transition-all ${
@@ -320,15 +325,24 @@ export default function UnitDetailPage() {
                   </span>
                 )}
               </button>
+
+              {/* Ask Zer0 button */}
+              <button
+                onClick={openZer0}
+                className="w-full py-3 rounded-2xl font-semibold border border-primary/20 text-primary hover:bg-primary/10 transition-colors flex items-center justify-center gap-2 text-sm"
+              >
+                <img src={zer0Avatar} alt="" className="w-6 h-6 rounded-full object-cover" />
+                اسأل Zer0 عن هذا الدرس
+              </button>
             </motion.div>
 
             {/* ❓ Quiz */}
             {unitQuiz && unitQuiz.length > 0 && (
               <Section id="quiz" icon={<HelpCircle className="w-5 h-5" />} title="❓ اختبار الوحدة" delay={0.5}>
-                <div className="glass rounded-2xl p-6">
+                <div className="glass rounded-2xl p-6 neon-border">
                   {!quizStarted ? (
                     <div className="text-center py-4">
-                      <p className="text-sm text-muted-foreground mb-4">{unitQuiz.length} أسئلة لاختبار فهمك</p>
+                      <p className="text-sm text-muted-foreground mb-4 font-arabic">{unitQuiz.length} أسئلة لاختبار فهمك</p>
                       <button
                         onClick={() => setQuizStarted(true)}
                         className="px-6 py-2.5 rounded-xl gradient-cyber text-primary-foreground font-semibold hover:opacity-90 transition-opacity"
@@ -338,7 +352,7 @@ export default function UnitDetailPage() {
                     </div>
                   ) : quizDone ? (
                     <div className="text-center py-4">
-                      <div className="text-4xl font-display font-bold mb-2">{Math.round((score / unitQuiz.length) * 100)}%</div>
+                      <div className="text-4xl font-display font-bold mb-2 text-primary cyber-glow-text">{Math.round((score / unitQuiz.length) * 100)}%</div>
                       <p className="text-muted-foreground mb-2">{score}/{unitQuiz.length} إجابات صحيحة</p>
                       <p className="text-xs text-primary mb-4">+{Math.round((score / unitQuiz.length) * 50)} XP من الاختبار</p>
                       {Math.round((score / unitQuiz.length) * 100) >= 90 && (
@@ -347,7 +361,6 @@ export default function UnitDetailPage() {
                     </div>
                   ) : (
                     <div>
-                      {/* Quiz progress bar */}
                       <div className="h-1.5 bg-secondary rounded-full mb-4 overflow-hidden">
                         <div
                           className="h-full gradient-cyber rounded-full transition-all duration-300"
@@ -363,14 +376,14 @@ export default function UnitDetailPage() {
                           <button
                             key={idx}
                             onClick={() => handleAnswer(idx)}
-                            className={`w-full text-left p-3.5 rounded-xl text-sm transition-all ${
+                            className={`w-full text-left p-3.5 rounded-xl text-sm transition-all border ${
                               selected === null
-                                ? "bg-secondary hover:bg-primary/10 hover:scale-[1.01]"
+                                ? "bg-secondary hover:bg-primary/10 hover:scale-[1.01] border-transparent hover:border-primary/20"
                                 : idx === unitQuiz[currentQ].correct
-                                  ? "bg-primary/20 text-primary ring-1 ring-primary/30"
+                                  ? "bg-primary/20 text-primary border-primary/30"
                                   : idx === selected
-                                    ? "bg-destructive/20 text-destructive ring-1 ring-destructive/30"
-                                    : "bg-secondary opacity-50"
+                                    ? "bg-destructive/20 text-destructive border-destructive/30"
+                                    : "bg-secondary opacity-50 border-transparent"
                             }`}
                           >
                             {opt}
@@ -384,12 +397,12 @@ export default function UnitDetailPage() {
             )}
           </div>
 
-          {/* ===== PREV/NEXT NAV ===== */}
+          {/* PREV/NEXT NAV */}
           <div className="flex items-center justify-between mt-10 gap-3">
             {prevUnit ? (
               <Link
                 to={`/courses/${course.id}/${prevUnit.id}`}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl glass hover:cyber-glow transition-shadow text-sm group flex-1"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl glass neon-border hover:border-primary/40 transition-all text-sm group flex-1"
               >
                 <ArrowLeft className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 <div className="min-w-0">
@@ -401,7 +414,7 @@ export default function UnitDetailPage() {
             {nextUnit ? (
               <Link
                 to={`/courses/${course.id}/${nextUnit.id}`}
-                className="flex items-center justify-end gap-2 px-4 py-3 rounded-xl glass hover:cyber-glow transition-shadow text-sm group flex-1 text-right"
+                className="flex items-center justify-end gap-2 px-4 py-3 rounded-xl glass neon-border hover:border-primary/40 transition-all text-sm group flex-1 text-right"
               >
                 <div className="min-w-0">
                   <div className="text-xs text-muted-foreground">الدرس التالي</div>
