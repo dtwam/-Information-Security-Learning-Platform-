@@ -218,12 +218,11 @@ export default function HomePage() {
             variants={fadeUp}
             className="glass rounded-3xl p-8 sm:p-12 text-center"
           >
-            <div className="w-16 h-16 mx-auto mb-6 rounded-2xl gradient-cyber flex items-center justify-center">
-              <Brain className="w-8 h-8 text-primary-foreground" />
-            </div>
+            <img src={zer0Face} alt="Zer0" className="w-20 h-20 mx-auto mb-6 rounded-full object-cover ring-2 ring-primary/30" />
             <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
-              <span className="gradient-cyber-text">Cyber Assistant</span>
+              <span className="gradient-cyber-text">Zer0</span>
             </h2>
+            <p className="font-arabic text-xs text-primary mb-2">الكيان الرقمي المساعد</p>
             <p className="font-arabic text-muted-foreground max-w-lg mx-auto mb-6 leading-relaxed" dir="rtl">
               مساعدك الذكي في رحلة تعلم الأمن السيبراني. اسأله أي سؤال وسيشرح لك بالعربية بأسلوب بسيط ومفهوم.
             </p>
