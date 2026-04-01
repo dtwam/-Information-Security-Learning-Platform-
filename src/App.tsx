@@ -4,10 +4,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "@/components/Navbar";
-import AIAssistant from "@/components/AIAssistant";
+import Zer0Assistant from "@/components/Zer0Assistant";
+import AuthModal from "@/components/AuthModal";
 import Footer from "@/components/Footer";
 import CyberBackground from "@/components/CyberBackground";
 import CyberIntro from "@/components/CyberIntro";
+import { useAuth } from "@/hooks/useAuth";
 import HomePage from "@/pages/HomePage";
 import CoursesPage from "@/pages/CoursesPage";
 import CourseDetailPage from "@/pages/CourseDetailPage";
@@ -20,15 +22,15 @@ import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
+function AppContent() {
+  const { user, login, signup, logout, showAuthModal, setShowAuthModal } = useAuth();
+
+  return (
+    <>
       <CyberIntro />
       <BrowserRouter>
         <CyberBackground />
-        <Navbar />
+        <Navbar user={user} onLogout={logout} onLoginClick={() => setShowAuthModal(true)} />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/courses" element={<CoursesPage />} />
@@ -41,8 +43,19 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
-        <AIAssistant />
+        <Zer0Assistant />
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onLogin={login} onSignup={signup} />
       </BrowserRouter>
+    </>
+  );
+}
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <AppContent />
     </TooltipProvider>
   </QueryClientProvider>
 );
