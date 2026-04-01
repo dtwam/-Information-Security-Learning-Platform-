@@ -1,45 +1,62 @@
 import { useState, useEffect, useCallback } from "react";
+import { supabase } from "@/lib/supabase";
+import type { User, Session } from "@supabase/supabase-js";
 
-interface User {
+interface AppUser {
   id: string;
   email: string;
   name: string;
 }
 
-const STORAGE_KEY = "cybersec-auth";
+function toAppUser(user: User): AppUser {
+  return {
+    id: user.id,
+    email: user.email ?? "",
+    name: user.user_metadata?.name ?? user.email?.split("@")[0] ?? "Agent",
+  };
+}
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [user, setUser] = useState<AppUser | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  }, [user]);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session: Session | null) => {
+        if (session?.user) {
+          setUser(toAppUser(session.user));
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
+      }
+    );
 
-  const login = useCallback((email: string, _password: string) => {
-    const name = email.split("@")[0];
-    setUser({ id: crypto.randomUUID(), email, name });
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(toAppUser(session.user));
+      }
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const login = useCallback(async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
     setShowAuthModal(false);
   }, []);
 
-  const signup = useCallback((email: string, _password: string) => {
-    const name = email.split("@")[0];
-    setUser({ id: crypto.randomUUID(), email, name });
+  const signup = useCallback(async (email: string, password: string) => {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
     setShowAuthModal(false);
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await supabase.auth.signOut();
     setUser(null);
   }, []);
 
@@ -51,5 +68,5 @@ export function useAuth() {
     }
   }, [user]);
 
-  return { user, login, signup, logout, showAuthModal, setShowAuthModal, requireAuth };
+  return { user, loading, login, signup, logout, showAuthModal, setShowAuthModal, requireAuth };
 }
