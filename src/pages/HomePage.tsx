@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Terminal, Shield, BookOpen, Zap, Brain, Target, Cpu, Lock, Rocket } from "lucide-react";
+import zer0Face from "@/assets/zer0-face.png";
 import { Link } from "react-router-dom";
 import { allCourses } from "@/data/index";
 import universityLogo from "@/assets/university-logo.png";
