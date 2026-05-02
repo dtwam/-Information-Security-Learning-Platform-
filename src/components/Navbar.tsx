@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, Search, Shield, LogIn, User, LogOut, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon, Search, LogIn, User, LogOut, ChevronDown, Languages } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import universityLogo from "@/assets/university-logo.png";
+import { useLanguage } from "@/hooks/useLanguage";
+import cyberMindLogo from "@/assets/cybermind-logo.png";
 
 interface NavbarProps {
   user: { email: string; name: string } | null;
@@ -11,45 +12,41 @@ interface NavbarProps {
   onLoginClick: () => void;
 }
 
-const navLinks = [
-  { to: "/", label: "HQ" },
-  { to: "/courses", label: "Missions" },
-  { to: "/lab", label: "Cyber Lab" },
-  { to: "/tools", label: "Arsenal" },
-  { to: "/dashboard", label: "Intel" },
-];
-
 export default function Navbar({ user, onLogout, onLoginClick }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { isDark, toggleTheme } = useTheme();
+  const { t, lang, toggleLang } = useLanguage();
   const location = useLocation();
+
+  const navLinks = [
+    { to: "/", label: t("nav.hq") },
+    { to: "/courses", label: t("nav.missions") },
+    { to: "/lab", label: t("nav.lab") },
+    { to: "/tools", label: t("nav.arsenal") },
+    { to: "/dashboard", label: t("nav.intel") },
+  ];
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 glass-strong">
         <div className="container mx-auto flex items-center justify-between h-16 px-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              <img src={universityLogo} alt="Al-Quds Open University" className="w-8 h-8 rounded-full object-cover" />
-              <div className="absolute inset-0 rounded-full border border-primary/30 group-hover:border-primary/60 transition-colors" />
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 p-1 border border-primary/20">
+              <img src={cyberMindLogo} alt="CyberMind" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="font-display font-bold text-sm gradient-cyber-text">CyberSec Academy</span>
-              <span className="text-[10px] text-muted-foreground hidden sm:flex items-center gap-1">
-                <Shield className="w-2.5 h-2.5" /> Al-Quds Open University
-              </span>
+              <span className="font-display font-bold text-base gradient-cyber-text tracking-wide">CyberMind</span>
+              <span className="text-[10px] text-muted-foreground hidden sm:block">Intelligent Cyber Academy</span>
             </div>
           </Link>
 
-          {/* Desktop links */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
                   location.pathname === link.to || (link.to !== "/" && location.pathname.startsWith(link.to))
                     ? "bg-primary/10 text-primary cyber-glow"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -60,16 +57,23 @@ export default function Navbar({ user, onLogout, onLoginClick }: NavbarProps) {
             ))}
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <Link to="/search" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors" aria-label="Search">
-              <Search className="w-5 h-5" />
+              <Search className="w-4.5 h-4.5" />
             </Link>
+            <button
+              onClick={toggleLang}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-muted-foreground hover:text-primary hover:bg-secondary transition-colors"
+              aria-label="Switch language"
+              title={lang === "ar" ? "Switch to English" : "تبديل إلى العربية"}
+            >
+              <Languages className="w-4 h-4" />
+              <span className="font-mono uppercase">{lang === "ar" ? "EN" : "ع"}</span>
+            </button>
             <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors" aria-label="Toggle theme">
-              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              {isDark ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
             </button>
 
-            {/* Auth button / user menu */}
             {user ? (
               <div className="relative">
                 <button
@@ -93,9 +97,9 @@ export default function Navbar({ user, onLogout, onLoginClick }: NavbarProps) {
                       </div>
                       <button
                         onClick={() => { onLogout(); setUserMenuOpen(false); }}
-                        className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors font-arabic"
+                        className="w-full flex items-center gap-2 px-3 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors"
                       >
-                        <LogOut className="w-4 h-4" /> تسجيل الخروج
+                        <LogOut className="w-4 h-4" /> {t("auth.logout")}
                       </button>
                     </motion.div>
                   )}
@@ -104,9 +108,9 @@ export default function Navbar({ user, onLogout, onLoginClick }: NavbarProps) {
             ) : (
               <button
                 onClick={onLoginClick}
-                className="hidden md:flex items-center gap-1.5 px-4 py-2 rounded-lg gradient-cyber text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all font-arabic"
+                className="hidden md:flex items-center gap-1.5 px-4 py-2 rounded-lg gradient-cyber text-primary-foreground text-sm font-semibold hover:opacity-90 transition-all"
               >
-                <LogIn className="w-4 h-4" /> تسجيل الدخول
+                <LogIn className="w-4 h-4" /> {t("auth.login")}
               </button>
             )}
 
@@ -121,58 +125,34 @@ export default function Navbar({ user, onLogout, onLoginClick }: NavbarProps) {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="fixed inset-0 z-[60] md:hidden">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] md:hidden">
             <div className="absolute inset-0 bg-background/80 backdrop-blur-xl" onClick={() => setMobileOpen(false)} />
             <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-card/95 backdrop-blur-2xl border-l border-border shadow-2xl"
+              className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-card/95 backdrop-blur-2xl border-l border-border shadow-2xl flex flex-col"
             >
               <div className="flex justify-end p-4">
-                <button onClick={() => setMobileOpen(false)} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
-                  <X className="w-6 h-6" />
-                </button>
+                <button onClick={() => setMobileOpen(false)} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary"><X className="w-6 h-6" /></button>
               </div>
-              <div className="flex flex-col items-center justify-center gap-2 px-8 pt-8">
+              <div className="flex flex-col items-center gap-2 px-8 pt-4">
                 {navLinks.map((link, i) => (
-                  <motion.div key={link.to} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 + i * 0.07 }} className="w-full">
-                    <Link
-                      to={link.to}
-                      onClick={() => setMobileOpen(false)}
+                  <motion.div key={link.to} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 + i * 0.05 }} className="w-full">
+                    <Link to={link.to} onClick={() => setMobileOpen(false)}
                       className={`block w-full px-6 py-4 rounded-xl text-lg font-medium text-center transition-all ${
-                        location.pathname === link.to ? "bg-primary/10 text-primary cyber-glow" : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
+                        location.pathname === link.to ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-secondary"
+                      }`}>{link.label}</Link>
                   </motion.div>
                 ))}
-                {/* Mobile auth */}
-                <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="w-full mt-4">
+                <div className="w-full pt-4">
                   {user ? (
-                    <button
-                      onClick={() => { onLogout(); setMobileOpen(false); }}
-                      className="w-full px-6 py-4 rounded-xl text-lg font-medium text-center text-destructive hover:bg-destructive/10 transition-all font-arabic"
-                    >
-                      تسجيل الخروج
-                    </button>
+                    <button onClick={() => { onLogout(); setMobileOpen(false); }} className="w-full px-6 py-4 rounded-xl text-lg font-medium text-center text-destructive hover:bg-destructive/10">{t("auth.logout")}</button>
                   ) : (
-                    <button
-                      onClick={() => { onLoginClick(); setMobileOpen(false); }}
-                      className="w-full px-6 py-4 rounded-xl text-lg font-semibold text-center gradient-cyber text-primary-foreground font-arabic"
-                    >
-                      تسجيل الدخول
-                    </button>
+                    <button onClick={() => { onLoginClick(); setMobileOpen(false); }} className="w-full px-6 py-4 rounded-xl text-lg font-semibold text-center gradient-cyber text-primary-foreground">{t("auth.login")}</button>
                   )}
-                </motion.div>
-              </div>
-              <div className="absolute bottom-8 left-0 right-0 flex justify-center">
-                <img src={universityLogo} alt="" className="w-10 h-10 rounded-full opacity-30" />
+                </div>
               </div>
             </motion.div>
           </motion.div>
