@@ -4,16 +4,21 @@
  */
 import { infoSecCourse, infoSecLabChallenges } from './course-infosec';
 import { wirelessCourse, wirelessLabChallenges } from './course-wireless';
+import { programming2Course, programming2LabChallenges } from './course-programming2';
 import { cyberTools } from './tools';
 import { achievements } from './achievements';
 import { terminalCommands } from './terminal-commands';
 import type { Course, CourseUnit, LabChallenge, CyberTool, Achievement } from './courses';
 
 // All courses array - add new courses here
-export const allCourses: Course[] = [infoSecCourse, wirelessCourse];
+export const allCourses: Course[] = [infoSecCourse, wirelessCourse, programming2Course];
 
 // All lab challenges combined
-export const allLabChallenges: LabChallenge[] = [...infoSecLabChallenges, ...wirelessLabChallenges];
+export const allLabChallenges: LabChallenge[] = [
+  ...infoSecLabChallenges,
+  ...wirelessLabChallenges,
+  ...programming2LabChallenges,
+];
 
 // Helper: get course by ID
 export function getCourseById(id: string): Course | undefined {
@@ -78,5 +83,5 @@ export function searchContent(query: string): Array<{ type: string; title: strin
 }
 
 // Re-export everything
-export { infoSecCourse, wirelessCourse, infoSecLabChallenges, wirelessLabChallenges, cyberTools, achievements, terminalCommands };
+export { infoSecCourse, wirelessCourse, programming2Course, infoSecLabChallenges, wirelessLabChallenges, programming2LabChallenges, cyberTools, achievements, terminalCommands };
 export type { Course, CourseUnit, LabChallenge, CyberTool, Achievement };
