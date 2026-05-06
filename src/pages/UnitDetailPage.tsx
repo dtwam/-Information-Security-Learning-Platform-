@@ -4,11 +4,11 @@ import { motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft, ArrowRight, CheckCircle2, HelpCircle, BookOpen,
-  Terminal, Lightbulb, Target, FileText, Play, ChevronRight,
+  Terminal, Lightbulb, Target, FileText, ChevronRight,
   Star, Trophy, Zap,
 } from "lucide-react";
 import { getUnit, getCourseById } from "@/data/index";
-import { unitVideos, unitObjectives, unitSummaries } from "@/data/unit-videos";
+import { unitObjectives, unitSummaries } from "@/data/unit-videos";
 import { useProgress } from "@/hooks/useProgress";
 
 /** Smooth scroll to section */
@@ -72,7 +72,7 @@ export default function UnitDetailPage() {
   const unitKey = `${course.id}-${unit.id}`;
   const isCompleted = progress.completedUnits.includes(unitKey);
   const unitQuiz = unit.quiz;
-  const videoId = unit.videoId || unitVideos[unitKey];
+  // videos removed by request — text-only platform
   const objective = unit.objectiveAr || unitObjectives[unitKey];
   const summary = unit.summaryAr || unitSummaries[unitKey];
 
