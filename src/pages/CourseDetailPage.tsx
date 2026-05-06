@@ -1,13 +1,15 @@
 /** Course detail page - shows all units for a specific course */
 import { motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, BookOpen, ChevronRight, CheckCircle2, FileText } from "lucide-react";
 import { getCourseById } from "@/data/index";
+import { getExamByCourseId } from "@/data/practical-exams";
 import { useProgress } from "@/hooks/useProgress";
 
 export default function CourseDetailPage() {
   const { courseId } = useParams<{ courseId: string }>();
   const course = getCourseById(courseId || "");
+  const exam = getExamByCourseId(courseId || "");
   const { progress } = useProgress();
 
   if (!course) {
@@ -39,7 +41,7 @@ export default function CourseDetailPage() {
           <p className="text-muted-foreground mb-4" dir="rtl">{course.descriptionAr}</p>
 
           {/* Progress */}
-          <div className="glass rounded-xl p-4 mb-8 max-w-sm">
+          <div className="glass rounded-xl p-4 mb-6 max-w-sm">
             <div className="flex justify-between text-sm mb-2">
               <span className="text-muted-foreground flex items-center gap-1"><BookOpen className="w-4 h-4" /> Progress</span>
               <span className="font-semibold">{completedCount}/{course.totalUnits}</span>
@@ -48,6 +50,27 @@ export default function CourseDetailPage() {
               <motion.div className="h-full gradient-cyber rounded-full" initial={{ width: 0 }} animate={{ width: `${(completedCount / course.totalUnits) * 100}%` }} transition={{ duration: 0.8 }} />
             </div>
           </div>
+
+          {/* Practical Exam CTA */}
+          {exam && (
+            <Link
+              to={`/courses/${course.id}/exam`}
+              className="flex items-center gap-3 p-4 mb-8 rounded-2xl border border-primary/30 bg-primary/5 hover:bg-primary/10 transition-colors group"
+            >
+              <div className="p-2.5 rounded-xl bg-primary/15 text-primary">
+                <FileText className="w-5 h-5" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-sm group-hover:text-primary transition-colors">
+                  Practical Exam Solution
+                </div>
+                <div className="text-xs text-muted-foreground" dir="rtl">
+                  حل الامتحان العملي الكامل مع شرح الخطوات والأوامر
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-muted-foreground" />
+            </Link>
+          )}
 
           {/* Units list */}
           <div className="space-y-3">
