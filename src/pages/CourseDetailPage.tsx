@@ -1,8 +1,9 @@
 /** Course detail page - shows all units for a specific course */
 import { motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, BookOpen, ChevronRight, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, BookOpen, ChevronRight, CheckCircle2, FileText } from "lucide-react";
 import { getCourseById } from "@/data/index";
+import { getExamByCourseId } from "@/data/practical-exams";
 import { useProgress } from "@/hooks/useProgress";
 
 export default function CourseDetailPage() {

@@ -14,6 +14,7 @@ import HomePage from "@/pages/HomePage";
 import CoursesPage from "@/pages/CoursesPage";
 import CourseDetailPage from "@/pages/CourseDetailPage";
 import UnitDetailPage from "@/pages/UnitDetailPage";
+import ExamPage from "@/pages/ExamPage";
 import LabPage from "@/pages/LabPage";
 import ToolsPage from "@/pages/ToolsPage";
 import SearchPage from "@/pages/SearchPage";
@@ -33,6 +34,7 @@ function AppContent() {
         <Route path="/" element={<HomePage />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/courses/:courseId" element={<CourseDetailPage />} />
+        <Route path="/courses/:courseId/exam" element={<ExamPage />} />
         <Route path="/courses/:courseId/:unitId" element={<UnitDetailPage />} />
         <Route path="/lab" element={<LabPage />} />
         <Route path="/tools" element={<ToolsPage />} />
