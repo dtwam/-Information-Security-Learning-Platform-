@@ -106,7 +106,6 @@ export default function UnitDetailPage() {
   const sections = [
     { id: "objective", label: "🎯 الهدف" },
     { id: "content", label: "📘 المحتوى" },
-    ...(videoId ? [{ id: "video", label: "🎥 فيديو" }] : []),
     ...(unit.concepts?.length ? [{ id: "concepts", label: "💡 مفاهيم" }] : []),
     ...(summary ? [{ id: "summary", label: "📌 ملخص" }] : []),
     ...(unitQuiz?.length ? [{ id: "quiz", label: "❓ اختبار" }] : []),
@@ -215,26 +214,7 @@ export default function UnitDetailPage() {
               </div>
             </Section>
 
-            {/* 🎥 Video */}
-            {videoId && (
-              <Section id="video" icon={<Play className="w-5 h-5" />} title="🎥 شرح بالفيديو" delay={0.25}>
-                <div className="glass rounded-2xl p-4 overflow-hidden">
-                  <div className="relative w-full rounded-xl overflow-hidden" style={{ paddingBottom: "56.25%" }}>
-                    <iframe
-                      className="absolute inset-0 w-full h-full rounded-xl"
-                      src={`https://www.youtube.com/embed/${videoId}`}
-                      title="Video explanation"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      loading="lazy"
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-3 text-center" dir="rtl">
-                    فيديو تعليمي باللغة العربية لشرح محتوى الوحدة
-                  </p>
-                </div>
-              </Section>
-            )}
+            {/* Video section removed by request — text-only platform */}
 
             {/* 🧪 Practical Example */}
             <Section id="practical" icon={<Terminal className="w-5 h-5" />} title="🧪 مثال عملي" delay={0.3}>
