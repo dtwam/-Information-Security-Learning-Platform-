@@ -36,8 +36,8 @@ export default function Navbar({ user, onLogout, onLoginClick }: NavbarProps) {
               <img src={cyberMindLogo} alt="CyberMind" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col leading-tight">
-              <span className="font-display font-bold text-base gradient-cyber-text tracking-wide">CyberMind</span>
-              <span className="text-[10px] text-muted-foreground hidden sm:block">Intelligent Cyber Academy</span>
+              <span className="font-display font-bold text-base gradient-cyber-text tracking-wide">TechSec QOU</span>
+              <span className="text-[10px] text-muted-foreground hidden sm:block">Al-Quds Open University · Cybersecurity Academy</span>
             </div>
           </Link>
 
