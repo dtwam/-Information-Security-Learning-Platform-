@@ -1,258 +1,205 @@
 import { motion } from "framer-motion";
-import { ArrowRight, Terminal, Shield, BookOpen, Zap, Brain, Target, Cpu, Lock, Rocket } from "lucide-react";
-import zer0Face from "@/assets/zer0-face.png";
+import { ArrowRight, BookOpen, Terminal, ShieldCheck, GraduationCap, FlaskConical } from "lucide-react";
 import { Link } from "react-router-dom";
 import { allCourses } from "@/data/index";
 import universityLogo from "@/assets/university-logo.png";
-import { useProgress } from "@/hooks/useProgress";
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function HomePage() {
-  const { progress } = useProgress();
-  const totalCompleted = progress.completedUnits.length;
-  const totalUnits = allCourses.reduce((a, c) => a + c.totalUnits, 0);
-
-  const containerVariants = {
-    hidden: {},
-    visible: { transition: { staggerChildren: 0.12 } },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40, scale: 0.9, filter: "blur(4px)" },
-    visible: {
-      opacity: 1, y: 0, scale: 1, filter: "blur(0px)",
-      transition: { duration: 0.6, ease: "easeOut" as const },
-    },
-  };
+  const { lang } = useLanguage();
+  const isAr = lang === "ar";
 
   const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
 
   return (
     <main className="min-h-screen relative z-10">
       {/* ─── HERO ─── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[88vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-primary/5" />
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              {/* University logo */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
-                className="flex justify-center mb-8"
-              >
-                <img src={universityLogo} alt="Al-Quds Open University" className="w-16 h-16 rounded-full object-cover ring-2 ring-primary/30" />
-              </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto text-center"
+          >
+            <div className="flex justify-center mb-6">
+              <img
+                src={universityLogo}
+                alt="Al-Quds Open University"
+                className="w-14 h-14 rounded-full object-cover ring-2 ring-primary/30"
+              />
+            </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight mb-8">
-                <span className="gradient-cyber-text cyber-glow-text">CyberSec</span>{" "}
-                <span className="text-foreground">Academy</span>
-              </h1>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs text-muted-foreground mb-6">
+              <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+              {isAr ? "أكاديمية رسمية · جامعة القدس المفتوحة" : "Official Academy · Al-Quds Open University"}
+            </div>
 
-              <p className="font-arabic text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed" dir="rtl">
-                منصة تعليمية متخصصة من جامعة القدس المفتوحة
-                <br />
-                لتدريس مقررات الأمن السيبراني بأسلوب تفاعلي حديث
-              </p>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold leading-tight mb-5">
+              <span className="gradient-cyber-text">TechSec</span>{" "}
+              <span className="text-foreground">QOU</span>
+            </h1>
 
-              <div className="flex flex-wrap gap-4 justify-center">
-                <Link
-                  to="/courses"
-                  className="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-xl gradient-cyber text-primary-foreground font-semibold text-base"
-                >
-                  <Rocket className="w-5 h-5" /> ابدأ المهمة 🚀
-                </Link>
-                <Link
-                  to="/lab"
-                  className="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-xl glass font-semibold text-foreground text-base"
-                >
-                  <Terminal className="w-5 h-5" /> افتح المختبر 💻
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="grid grid-cols-3 gap-8 mt-16 max-w-sm mx-auto"
+            <p
+              className="font-arabic text-base sm:text-lg text-muted-foreground mb-3 max-w-2xl mx-auto leading-relaxed"
+              dir="rtl"
             >
+              أكاديمية تيك سيك — جامعة القدس المفتوحة
+            </p>
+            <p className="text-sm sm:text-base text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+              {isAr
+                ? "المنصة الرسمية لطلاب تخصص أنظمة المعلومات وأمن المعلومات لتعلّم الأمن السيبراني عملياً."
+                : "The official learning platform for Information Systems & Information Security students at Al-Quds Open University."}
+            </p>
+
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Link
+                to="/courses"
+                className="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-xl gradient-cyber text-primary-foreground font-semibold"
+              >
+                <BookOpen className="w-5 h-5" />
+                {isAr ? "تصفح المقررات" : "Browse Courses"}
+              </Link>
+              <Link
+                to="/lab"
+                className="btn-glow inline-flex items-center gap-2 px-7 py-3.5 rounded-xl glass font-semibold text-foreground"
+              >
+                <Terminal className="w-5 h-5" />
+                {isAr ? "افتح المختبر" : "Open Lab"}
+              </Link>
+            </div>
+
+            {/* Compact stats */}
+            <div className="grid grid-cols-3 gap-8 mt-14 max-w-sm mx-auto">
               {[
-                { value: `${allCourses.length}`, label: "مقررات" },
-                { value: `${totalUnits}`, label: "وحدات" },
-                { value: `${totalCompleted}`, label: "مكتملة" },
-              ].map((stat) => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-2xl font-display font-bold text-primary cyber-glow-text">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground font-arabic">{stat.label}</div>
+                { value: `${allCourses.length}`, en: "Courses", ar: "مقررات" },
+                {
+                  value: `${allCourses.reduce((a, c) => a + c.totalUnits, 0)}`,
+                  en: "Units",
+                  ar: "وحدات",
+                },
+                { value: "2", en: "Practical Exams", ar: "امتحانات عملية" },
+              ].map((s) => (
+                <div key={s.en} className="text-center">
+                  <div className="text-2xl font-display font-bold text-primary">{s.value}</div>
+                  <div className="text-xs text-muted-foreground">{isAr ? s.ar : s.en}</div>
                 </div>
               ))}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── WHY THIS PLATFORM ─── */}
-      <section className="py-24 px-4 relative z-10">
-        <div className="container mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
-              لماذا <span className="gradient-cyber-text">هذه المنصة</span>؟
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto font-arabic" dir="rtl">
-              تجربة تعليمية فريدة تجمع بين المحتوى الأكاديمي والتطبيق العملي
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
-          >
-            {[
-              { icon: BookOpen, title: "محتوى أكاديمي", desc: "مبني على مقررات جامعة القدس المفتوحة" },
-              { icon: Terminal, title: "مختبر تفاعلي", desc: "تدرب على أدوات الأمن السيبراني الحقيقية" },
-              { icon: Brain, title: "مساعد ذكي", desc: "مساعد AI يشرح لك المفاهيم بالعربية" },
-              { icon: Target, title: "تعلم عملي", desc: "تمارين ومحاكاة لسيناريوهات حقيقية" },
-            ].map((item, i) => (
-              <motion.div key={item.title} variants={cardVariants} className="glass rounded-2xl p-6 text-center card-hover">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-xl gradient-cyber flex items-center justify-center">
-                  <item.icon className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <h3 className="font-arabic font-bold text-base mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground font-arabic" dir="rtl">{item.desc}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ─── ACTIVE MISSIONS (COURSES) ─── */}
-      <section className="py-24 px-4 relative z-10">
-        <div className="container mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
-              <span className="gradient-cyber-text">المقررات</span> المتاحة
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto font-arabic" dir="rtl">
-              اختر مقررك لبدء رحلة التعلم
-            </p>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto"
-          >
-            {allCourses.map((course) => (
-              <motion.div key={course.id} variants={cardVariants}>
-                <Link to={`/courses/${course.id}`} className="block glass rounded-2xl p-6 card-hover group">
-                  <div className="flex items-start gap-4">
-                    <div className="text-4xl">{course.icon}</div>
-                    <div className="flex-1">
-                      <h3 className="font-display font-semibold text-lg mb-1 group-hover:text-primary transition-colors">{course.title}</h3>
-                      <p className="text-sm text-muted-foreground font-arabic mb-2" dir="rtl">{course.titleAr}</p>
-                      <p className="text-sm text-muted-foreground mb-3">{course.description}</p>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> {course.totalUnits} objectives</span>
-                        <span className="px-2 py-0.5 rounded bg-secondary text-secondary-foreground">{course.code}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ─── WHAT YOU WILL LEARN ─── */}
-      <section className="py-24 px-4 relative z-10">
-        <div className="container mx-auto">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp} className="text-center mb-16">
-            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
-              ماذا <span className="gradient-cyber-text">ستتعلم</span>؟
-            </h2>
-          </motion.div>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto"
-          >
-            {[
-              { icon: Shield, label: "أساسيات أمن المعلومات" },
-              { icon: Lock, label: "التشفير وحماية البيانات" },
-              { icon: Cpu, label: "أمن الشبكات اللاسلكية" },
-              { icon: Target, label: "اختبار الاختراق الأخلاقي" },
-              { icon: Terminal, label: "أدوات الأمن السيبراني" },
-              { icon: Brain, label: "تحليل الثغرات الأمنية" },
-            ].map((item) => (
-              <motion.div key={item.label} variants={cardVariants} className="glass rounded-2xl p-5 flex items-center gap-4 card-hover">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <item.icon className="w-5 h-5 text-primary" />
-                </div>
-                <span className="font-arabic font-semibold text-sm">{item.label}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ─── AI ASSISTANT SECTION ─── */}
-      <section className="py-24 px-4 relative z-10">
-        <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={fadeUp}
-            className="glass rounded-3xl p-8 sm:p-12 text-center"
-          >
-            <img src={zer0Face} alt="Zer0" className="w-20 h-20 mx-auto mb-6 rounded-full object-cover ring-2 ring-primary/30" />
-            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
-              <span className="gradient-cyber-text">Zer0</span>
-            </h2>
-            <p className="font-arabic text-xs text-primary mb-2">الكيان الرقمي المساعد</p>
-            <p className="font-arabic text-muted-foreground max-w-lg mx-auto mb-6 leading-relaxed" dir="rtl">
-              مساعدك الذكي في رحلة تعلم الأمن السيبراني. اسأله أي سؤال وسيشرح لك بالعربية بأسلوب بسيط ومفهوم.
-            </p>
-            <div className="flex flex-wrap gap-3 justify-center font-arabic text-sm">
-              <span className="px-4 py-2 rounded-xl bg-primary/10 text-primary">اشرح بشكل أبسط</span>
-              <span className="px-4 py-2 rounded-xl bg-accent/10 text-accent">اعطني مثال</span>
-              <span className="px-4 py-2 rounded-xl bg-cyber-success/10 text-cyber-success">لخص لي</span>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── FINAL CTA ─── */}
-      <section className="py-24 px-4 relative z-10">
-        <div className="container mx-auto max-w-2xl text-center">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp}>
-            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-6">
-              هل أنت مستعد <span className="gradient-cyber-text">للبدء</span>؟
+      {/* ─── COURSES (compact) ─── */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-5xl">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            variants={fadeUp}
+            className="text-center mb-10"
+          >
+            <h2 className="text-2xl sm:text-3xl font-display font-bold mb-3">
+              {isAr ? "المقررات" : "Courses"}
             </h2>
-            <p className="font-arabic text-muted-foreground mb-8" dir="rtl">
-              انضم الآن وابدأ رحلتك في عالم الأمن السيبراني
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              {isAr
+                ? "مقررات أكاديمية مع شروحات وحلول الامتحانات العملية."
+                : "Academic courses with full lessons and practical-exam solutions."}
             </p>
-            <Link
-              to="/courses"
-              className="btn-glow inline-flex items-center gap-2 px-8 py-4 rounded-xl gradient-cyber text-primary-foreground font-semibold text-lg"
-            >
-              🚀 ابدأ التعلم الآن <ArrowRight className="w-5 h-5" />
-            </Link>
           </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {allCourses.map((course) => (
+              <Link
+                key={course.id}
+                to={`/courses/${course.id}`}
+                className="glass rounded-2xl p-5 hover:cyber-glow transition-shadow group"
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <span className="text-3xl">{course.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-display font-semibold text-base group-hover:text-primary transition-colors leading-tight">
+                      {course.title}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-1" dir="rtl">
+                      {course.titleAr}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <BookOpen className="w-3.5 h-3.5" /> {course.totalUnits} {isAr ? "وحدات" : "units"}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-secondary text-secondary-foreground">
+                    {course.code}
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── HIGHLIGHTS ─── */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                icon: GraduationCap,
+                title: isAr ? "محتوى أكاديمي" : "Academic Content",
+                desc: isAr
+                  ? "مبني على مقررات جامعة القدس المفتوحة"
+                  : "Built on Al-Quds Open University curriculum",
+              },
+              {
+                icon: FlaskConical,
+                title: isAr ? "حلول الامتحانات العملية" : "Practical Exam Solutions",
+                desc: isAr
+                  ? "خطوات مرتبة وأوامر وشروحات احترافية"
+                  : "Structured steps, commands, and clear explanations",
+              },
+              {
+                icon: Terminal,
+                title: isAr ? "مختبر تفاعلي" : "Interactive Lab",
+                desc: isAr ? "تدرّب على أدوات حقيقية" : "Practice real-world tools",
+              },
+            ].map((item) => (
+              <div key={item.title} className="glass rounded-2xl p-5 text-center">
+                <div className="w-10 h-10 mx-auto mb-3 rounded-xl gradient-cyber flex items-center justify-center">
+                  <item.icon className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
+                <p className="text-xs text-muted-foreground">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA ─── */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-2xl text-center">
+          <h2 className="text-2xl sm:text-3xl font-display font-bold mb-4">
+            {isAr ? "ابدأ التعلّم اليوم" : "Start learning today"}
+          </h2>
+          <p className="text-sm text-muted-foreground mb-7">
+            {isAr
+              ? "اختر مقررك وابدأ رحلتك في الأمن السيبراني."
+              : "Pick a course and begin your cybersecurity journey."}
+          </p>
+          <Link
+            to="/courses"
+            className="btn-glow inline-flex items-center gap-2 px-8 py-3.5 rounded-xl gradient-cyber text-primary-foreground font-semibold"
+          >
+            {isAr ? "تصفح المقررات" : "Browse Courses"} <ArrowRight className="w-5 h-5" />
+          </Link>
         </div>
       </section>
     </main>
