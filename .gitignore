@@ -1,3 +1,23 @@
+# Environment Variables 
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+
+# Dependencies
+node_modules
+/.pnpm-store
+/.yarn
+/.bun
+
+# Build outputs
+dist
+dist-ssr
+build
+.out
+
 # Logs
 logs
 *.log
@@ -7,12 +27,21 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
 
-# Editor directories and files
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# Temporary folders
+tmp
+temp
+
+# Editor & IDE
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +51,24 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+
+# Bun
+bun.lockb   # ←  
+# bun.lock    #   
+
+# Supabase  
+.supabase
+
+# Misc
+*.local
+.cache
+.eslintcache
+*.tsbuildinfo
+
+# Testing
+test-results
+playwright-report
